@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: miro
+
+  datasource:
+    url: jdbc:h2:mem:~/MiroApplication
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
