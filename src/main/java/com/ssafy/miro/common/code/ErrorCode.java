@@ -23,7 +23,7 @@ public enum ErrorCode {
     EXPIRED_REFRESH_TOKEN(2007, UNAUTHORIZED, "만료된 RefreshToken 입니다."),
     FAIL_OAUTH_USERINFO_RETRIEVAL(2008, UNAUTHORIZED, "회원 정보를 가져오는데 실패했습니다."),
 
-    NOT_FOUND_TODO_ID(3001, NOT_FOUND, "요청한 ID에 해당하는 게시물이 존재하지 않습니다."),
+    NOT_FOUND_BOARD_ID(3001, NOT_FOUND, "요청한 ID에 해당하는 게시물이 존재하지 않습니다."),
     NOT_FOUND_USER_ID(3002, NOT_FOUND, "요청한 ID에 해당하는 사용자가 존재하지 않습니다."),
     NOT_FOUND_USER_EMAIL(3003, NOT_FOUND, "요청한 이메일에 해당하는 사용자가 존재하지 않습니다."),
     NOT_FOUND_IMAGE_FILE(3004, NOT_FOUND, "요청한 이미지 파일을 찾을 수 없습니다."),
