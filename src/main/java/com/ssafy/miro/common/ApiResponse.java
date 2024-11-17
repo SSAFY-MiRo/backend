@@ -8,7 +8,6 @@ import com.ssafy.miro.common.code.SuccessCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
 public record ApiResponse<T>(@JsonProperty("isSuccess") boolean isSuccess,
                              int code,
@@ -19,7 +18,7 @@ public record ApiResponse<T>(@JsonProperty("isSuccess") boolean isSuccess,
         return new ApiResponse<>(true, SuccessCode.OK.getCode(), SuccessCode.OK.getMessage(), result);
     }
 
-    public static <T> ApiResponse<T> of(T result, SuccessCode successCode) {
+    public static <T> ApiResponse<T> of(SuccessCode successCode, T result) {
         return new ApiResponse<>(true, successCode.getCode(), successCode.getMessage(), result);
     }
 
