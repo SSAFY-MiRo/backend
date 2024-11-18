@@ -3,7 +3,7 @@ spring:
     name: miro
 
   datasource:
-    url: jdbc:h2:mem:~/MiroApplication
+    url: jdbc:h2:tcp://localhost/~/MiroApplication
     driver-class-name: org.h2.Driver
     username: sa
     password:

@@ -1,6 +1,6 @@
 package com.ssafy.miro.common.exception;
 
-import com.ssafy.miro.board.exception.BoardNotFoundException;
+import com.ssafy.miro.article.exception.ArticleNotFoundException;
 import com.ssafy.miro.common.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -31,8 +31,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ApiResponse.onFailure(INVALID_REQUEST, null));
     }
 
-    @ExceptionHandler(BoardNotFoundException.class)
-    public ResponseEntity<Object> handleBoardNotFoundException(final BoardNotFoundException e) {
+    @ExceptionHandler(ArticleNotFoundException.class)
+    public ResponseEntity<Object> handleBoardNotFoundException(final ArticleNotFoundException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ApiResponse.onFailure(e.getErrorCode(),null));
     }
 
