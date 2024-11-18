@@ -1,25 +1,33 @@
-package com.ssafy.miro.board.domain;
+package com.ssafy.miro.article.domain;
 
+import com.ssafy.miro.common.auditing.BaseEntity;
+import com.ssafy.miro.member.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
-@Entity
+@Entity(name = "articles")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Board {
+public class Article extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+    @Column(nullable = false, length = 10)
+    private String category;
     @Column(nullable = false, length = 90)
     private String title;
     @Column(nullable = false)
     private String content;
-    private Long view;
+    @ColumnDefault("0")
+    private Long view=0L;
 
-    public Board(String title, String content) {
+    public Article(String title, String content) {
         this.title = title;
         this.content = content;
         this.view = 0L;

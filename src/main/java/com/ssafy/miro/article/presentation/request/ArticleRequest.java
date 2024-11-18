@@ -1,8 +1,8 @@
-package com.ssafy.miro.board.presentation.request;
+package com.ssafy.miro.article.presentation.request;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record BoardRequest(
+public record ArticleRequest(
         @NotBlank String title,
         @NotBlank String content
 ) {
