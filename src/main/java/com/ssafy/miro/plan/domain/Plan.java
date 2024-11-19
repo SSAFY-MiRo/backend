@@ -1,7 +1,7 @@
 package com.ssafy.miro.plan.domain;
 
 import com.ssafy.miro.common.auditing.BaseEntity;
-import com.ssafy.miro.member.domain.User;
+import com.ssafy.miro.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,8 @@ public class Plan extends BaseEntity {
     @Column(nullable = false, length = 30)
     private String location;
     @Column(nullable = false, length = 10)
-    private String accessLevel;
+    @Enumerated(EnumType.STRING)
+    private PlanAccessLevel accessLevel;
     Date startDate;
     Date endDate;
 }
