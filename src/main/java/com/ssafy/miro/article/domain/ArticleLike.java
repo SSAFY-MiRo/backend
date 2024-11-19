@@ -1,6 +1,6 @@
 package com.ssafy.miro.article.domain;
 
-import com.ssafy.miro.member.domain.User;
+import com.ssafy.miro.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

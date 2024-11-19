@@ -2,6 +2,8 @@ package com.ssafy.miro.article.presentation;
 
 import com.ssafy.miro.article.application.ArticleService;
 import com.ssafy.miro.article.application.response.ArticleItems;
+import com.ssafy.miro.article.domain.ArticleCategory;
+import com.ssafy.miro.article.domain.ArticleSearchType;
 import com.ssafy.miro.article.presentation.request.ArticleRequest;
 import com.ssafy.miro.common.ApiResponse;
 import jakarta.validation.Valid;
@@ -10,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.net.URI;
 import java.util.List;
 
@@ -28,7 +31,7 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ArticleItems>>> getBoards() {
+    public ResponseEntity<ApiResponse<List<ArticleItems>>> getBoards(@RequestParam(name = "category") ArticleCategory articleCategory, @RequestParam(name = "search") String search, @RequestParam(name = "search-type") ArticleSearchType searchType, Pageable pageable) {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoards()));
     }
 
