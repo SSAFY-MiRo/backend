@@ -22,7 +22,7 @@ public class ArticleService {
 
     @Transactional
     public Long save(ArticleRequest articleRequest) {
-        Article newArticle = articleRepository.save(new Article(articleRequest.title(), articleRequest.content()));
+        Article newArticle = articleRepository.save(new Article(articleRequest.title(), articleRequest.content(), articleRequest.category()));
         return newArticle.getId();
     }
 
@@ -43,6 +43,8 @@ public class ArticleService {
 
     @Transactional
     public void deleteBoard(Long id) {
-        articleRepository.deleteById(id);
+        Article article = articleRepository.findById(id).orElseThrow(()->new ArticleNotFoundException(NOT_FOUND_BOARD_ID));
+        article.updateDeleted();
     }
+
 }
