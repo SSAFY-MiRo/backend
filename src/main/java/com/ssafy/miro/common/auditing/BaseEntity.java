@@ -3,6 +3,7 @@ package com.ssafy.miro.common.auditing;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 
+@Getter
 @MappedSuperclass
 @EnableJpaAuditing
 @EntityListeners(AuditingEntityListener.class)
@@ -23,7 +25,7 @@ public abstract class BaseEntity {
     private LocalDateTime modifiedAt;
     @Column(nullable = false)
     @ColumnDefault("false")
-    private boolean deleted=false;
+    private boolean deleted = false;
 
     public void updateDeleted() {
         this.deleted = true;
