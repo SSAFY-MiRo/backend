@@ -26,13 +26,13 @@ import static com.ssafy.miro.common.code.SuccessCode.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/board")
+@RequestMapping("api/v1/article")
 public class ArticleController {
     private final ArticleService articleService;
     @PostMapping
     public ResponseEntity<ApiResponse<Object>> createBoard(@Valid @RequestBody ArticleCreateRequest articleCreateRequest) {
         Long newBoardId = articleService.save(articleCreateRequest);
-        return ResponseEntity.created( URI.create("/board/"+newBoardId)).body(ApiResponse.of(CREATE_BOARD, null));
+        return ResponseEntity.created( URI.create("/article/"+newBoardId)).body(ApiResponse.of(CREATE_BOARD, null));
     }
 
     @GetMapping
