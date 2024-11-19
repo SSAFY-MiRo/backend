@@ -6,6 +6,10 @@ import com.ssafy.miro.member.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DialectOverride;
 
 @Getter
 @NoArgsConstructor
@@ -22,4 +26,8 @@ public class Comment extends BaseEntity {
     private Article article;
     @Column(nullable = false, length = 300)
     private String content;
+
+    public void updateComment(String content) {
+        this.content = content;
+    }
 }

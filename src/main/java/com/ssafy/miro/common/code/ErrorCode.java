@@ -27,6 +27,7 @@ public enum ErrorCode {
     NOT_FOUND_USER_ID(3002, NOT_FOUND, "요청한 ID에 해당하는 사용자가 존재하지 않습니다."),
     NOT_FOUND_USER_EMAIL(3003, NOT_FOUND, "요청한 이메일에 해당하는 사용자가 존재하지 않습니다."),
     NOT_FOUND_IMAGE_FILE(3004, NOT_FOUND, "요청한 이미지 파일을 찾을 수 없습니다."),
+    NOT_FOUND_COMMENT_ID(3005, NOT_FOUND, "요청한 ID에 해당하는 댓글이 존재하지 않습니다."),
 
     SERVER_ERROR(4000, INTERNAL_SERVER_ERROR, "서버 에러가 발생하였습니다.");
 
