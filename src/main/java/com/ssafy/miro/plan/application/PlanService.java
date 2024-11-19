@@ -2,11 +2,8 @@ package com.ssafy.miro.plan.application;
 
 import com.ssafy.miro.attraction.application.AttractionService;
 import com.ssafy.miro.attraction.domain.Attraction;
-import com.ssafy.miro.attraction.domain.exception.AttractionNotFoundException;
-import com.ssafy.miro.attraction.domain.repository.AttractionRespository;
-import com.ssafy.miro.common.code.ErrorCode;
+import com.ssafy.miro.plan.application.response.PlanListResponse;
 import com.ssafy.miro.plan.domain.Plan;
-import com.ssafy.miro.plan.domain.PlanAccessLevel;
 import com.ssafy.miro.plan.domain.PlanAttraction;
 import com.ssafy.miro.plan.domain.respository.PlanAttractionRespository;
 import com.ssafy.miro.plan.domain.respository.PlanRepository;
@@ -69,5 +66,14 @@ public class PlanService {
 
         // PlanAttraction 리스트 생성 및 저장
         savePlanAttractions(plan, planCreateRequest.planLocations());
+    }
+
+    public void getPlan(Long planId) {
+
+    }
+
+    public List<PlanListResponse> getPlans(){
+        //사용자 처리해줘야 함
+        return planRepository.findAll().stream().map(PlanListResponse::of).toList();
     }
 }

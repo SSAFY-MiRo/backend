@@ -2,11 +2,15 @@ package com.ssafy.miro.plan.presentation;
 
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.plan.application.PlanService;
+import com.ssafy.miro.plan.application.response.PlanListResponse;
 import com.ssafy.miro.plan.presentation.request.PlanCreateRequest;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.ssafy.miro.common.code.SuccessCode.*;
 
@@ -36,6 +40,18 @@ public class PlanController {
         planService.updatePlan(id, planCreateRequest);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<Object>> getPlan(@PathVariable Long id) {
+
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<Object>> getPlans() {
+        List<PlanListResponse> plans = planService.getPlans();
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(plans));
+    }
+
 
 
 }
