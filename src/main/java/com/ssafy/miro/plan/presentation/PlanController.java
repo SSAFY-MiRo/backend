@@ -6,10 +6,7 @@ import com.ssafy.miro.plan.presentation.request.PlanCreateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.ssafy.miro.common.code.SuccessCode.*;
 
@@ -28,5 +25,10 @@ public class PlanController {
         return ResponseEntity.ok().body(ApiResponse.of(CREATE_PLAN, null));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Object>> deletePlan(@PathVariable Long id) {
+        planService.deletePlan(id);
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
+    }
 
 }

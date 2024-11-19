@@ -10,6 +10,7 @@ import com.ssafy.miro.plan.domain.PlanAccessLevel;
 import com.ssafy.miro.plan.domain.PlanAttraction;
 import com.ssafy.miro.plan.domain.respository.PlanAttractionRespository;
 import com.ssafy.miro.plan.domain.respository.PlanRepository;
+import com.ssafy.miro.plan.exception.PlanNotFoundException;
 import com.ssafy.miro.plan.presentation.request.PlanCreateRequest;
 import com.ssafy.miro.plan.presentation.request.PlanInfo;
 import com.ssafy.miro.plan.presentation.request.PlanLocations;
@@ -18,7 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+
+import static com.ssafy.miro.common.code.ErrorCode.*;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -54,4 +56,9 @@ public class PlanService {
         return new PlanAttraction(newPlan, attraction, locationInfo.day(), locationInfo.order());
     }
 
+    @Transactional
+    public void deletePlan(Long planId) {
+        Plan plan=planRepository.findById(planId).orElseThrow(()->new PlanNotFoundException(NOT_FOUND_PLAN_ID));
+        plan.updateDeleted();
+    }
 }
