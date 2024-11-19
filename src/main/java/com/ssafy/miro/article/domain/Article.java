@@ -1,8 +1,6 @@
 package com.ssafy.miro.article.domain;
 
 import com.ssafy.miro.common.auditing.BaseEntity;
-import com.ssafy.miro.user.domain.User;
-import com.ssafy.miro.user.domain.UserType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,6 +42,6 @@ public class Article extends BaseEntity {
     }
 
     public void updateDelete() {
-        this.setDeleted();
+        this.updateDeleted();
     }
 }

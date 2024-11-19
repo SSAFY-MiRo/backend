@@ -2,7 +2,6 @@ package com.ssafy.miro.article.application;
 
 import com.ssafy.miro.article.application.response.ArticleItems;
 import com.ssafy.miro.article.domain.Article;
-import com.ssafy.miro.article.domain.ArticleCategory;
 import com.ssafy.miro.article.domain.repository.ArticleRepository;
 import com.ssafy.miro.article.exception.ArticleNotFoundException;
 import com.ssafy.miro.article.presentation.request.ArticleRequest;
@@ -44,7 +43,8 @@ public class ArticleService {
 
     @Transactional
     public void deleteBoard(Long id) {
-        articleRepository.deleteById(id);
+        Article article = articleRepository.findById(id).orElseThrow(()->new ArticleNotFoundException(NOT_FOUND_BOARD_ID));
+        article.updateDeleted();
     }
 
 }
