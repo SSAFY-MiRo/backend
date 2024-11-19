@@ -1,7 +1,8 @@
 package com.ssafy.miro.article.domain;
 
 import com.ssafy.miro.common.auditing.BaseEntity;
-import com.ssafy.miro.member.domain.User;
+import com.ssafy.miro.user.domain.User;
+import com.ssafy.miro.user.domain.UserType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,11 +16,12 @@ public class Article extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id")
+//    private User user;
     @Column(nullable = false, length = 10)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private ArticleCategory category;
     @Column(nullable = false, length = 90)
     private String title;
     @Column(nullable = false)
@@ -27,14 +29,21 @@ public class Article extends BaseEntity {
     @ColumnDefault("0")
     private Long view=0L;
 
-    public Article(String title, String content) {
+    public Article(String title, String content, ArticleCategory category) {
+        //나중에 User를 token을 통해서 연결하는걸로 변경해야 함
+//        this.user= new User("123","123","123", UserType.USER.toString(),UserType.USER,"/");
         this.title = title;
         this.content = content;
+        this.category = category;
         this.view = 0L;
     }
 
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void updateDelete() {
+        this.setDeleted();
     }
 }
