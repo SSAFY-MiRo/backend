@@ -1,6 +1,7 @@
 package com.ssafy.miro.article.presentation;
 
 import com.ssafy.miro.article.application.ArticleService;
+import com.ssafy.miro.article.application.response.ArticleItem;
 import com.ssafy.miro.article.application.response.ArticleItems;
 import com.ssafy.miro.article.domain.ArticleCategory;
 import com.ssafy.miro.article.domain.ArticleSearchType;
@@ -43,7 +44,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ArticleItems>> getBoardById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ArticleItem>> getBoardById(@PathVariable Long id) {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoard(id)));
     }
 

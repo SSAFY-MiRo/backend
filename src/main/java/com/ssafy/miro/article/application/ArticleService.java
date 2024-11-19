@@ -1,9 +1,11 @@
 package com.ssafy.miro.article.application;
 
+import com.ssafy.miro.article.application.response.ArticleItem;
 import com.ssafy.miro.article.application.response.ArticleItems;
 import com.ssafy.miro.article.domain.Article;
 import com.ssafy.miro.article.domain.ArticleCategory;
 import com.ssafy.miro.article.domain.ArticleSearchType;
+import com.ssafy.miro.article.domain.repository.ArticleLikeRepository;
 import com.ssafy.miro.article.domain.repository.ArticleRepository;
 import com.ssafy.miro.article.exception.ArticleNotFoundException;
 import com.ssafy.miro.article.presentation.request.ArticleCreateRequest;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ssafy.miro.common.code.ErrorCode.NOT_FOUND_BOARD_ID;
 
@@ -24,6 +27,7 @@ import static com.ssafy.miro.common.code.ErrorCode.NOT_FOUND_BOARD_ID;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final ArticleLikeRepository articleLikeRepository;
 
     @Transactional
     public Long save(ArticleCreateRequest articleCreateRequest) {
@@ -44,9 +48,11 @@ public class ArticleService {
 
     }
 
-    public ArticleItems getBoard(Long id) {
-        return articleRepository.findById(id).map(ArticleItems::of)
-                .orElseThrow(()->new ArticleNotFoundException(NOT_FOUND_BOARD_ID));
+    public ArticleItem getBoard(Long id) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new ArticleNotFoundException(NOT_FOUND_BOARD_ID));
+        Long likeCount=articleLikeRepository.countByArticle(article);
+        //사용자 like 했는지 안했는지 해줘야 함
+        return ArticleItem.of(article,likeCount,true);
     }
 
     @Transactional

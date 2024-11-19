@@ -1,5 +1,6 @@
 package com.ssafy.miro.article.application.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.miro.article.domain.Article;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ public record ArticleItem(
         String title,
         String content,
         Long view,
+        @JsonFormat(pattern = "yyyy.mm.dd")
         LocalDateTime createTime,
         Long like,
         Boolean isLike
