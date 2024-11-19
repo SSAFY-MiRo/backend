@@ -51,5 +51,4 @@ public class ArticleController {
         articleService.deleteBoard(id);
         return ResponseEntity.ok().body(ApiResponse.of(DELETE_BOARD, null));
     }
-
 }
