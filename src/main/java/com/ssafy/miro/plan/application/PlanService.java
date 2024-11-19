@@ -61,4 +61,13 @@ public class PlanService {
         Plan plan=planRepository.findById(planId).orElseThrow(()->new PlanNotFoundException(NOT_FOUND_PLAN_ID));
         plan.updateDeleted();
     }
+
+    @Transactional
+    public void updatePlan(Long id, PlanCreateRequest planCreateRequest) {
+        Plan plan = planRepository.findById(id).orElseThrow(() -> new PlanNotFoundException(NOT_FOUND_PLAN_ID));
+        planAttractionRespository.deleteByPlan(plan);
+
+        // PlanAttraction 리스트 생성 및 저장
+        savePlanAttractions(plan, planCreateRequest.planLocations());
+    }
 }

@@ -31,4 +31,11 @@ public class PlanController {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Object>> updatePlan(@PathVariable Long id, @RequestBody PlanCreateRequest planCreateRequest) {
+        planService.updatePlan(id, planCreateRequest);
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
+    }
+
+
 }
