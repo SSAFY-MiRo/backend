@@ -22,7 +22,7 @@ public class EmailController {
 
     @GetMapping("/test")
     public ResponseEntity<ApiResponse<Object>> test() {
-        emailService.sendVerificationEmail("dhtpgkr1999@gmail.com");
+        emailService.sendVerificationEmail("hobby0519@gmail.com");
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
 }

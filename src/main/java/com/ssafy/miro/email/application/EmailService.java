@@ -26,12 +26,12 @@ public class EmailService {
     public void sendVerificationEmail(String email) {
         String token=generateVerificationCode();
         redisTokenService.saveToken(emailPrefix+token,email,authCodeExpirationMillis);
-        String verificationLink="http://localhost:8080/verify-email?token="+token;
+        String verificationLink="http://localhost:8080/api/v1/user/verify-email?token="+token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
-        message.setSubject("Verification Email");
-        message.setText("Your verification code has been sent to " + verificationLink);
+        message.setSubject("MiRo 인증 확인 메일입니다.");
+        message.setText("MiRo 인증을 하려면 다음 링크를 클릭하세요: " + verificationLink);
 
         mailSender.send(message);
     }
