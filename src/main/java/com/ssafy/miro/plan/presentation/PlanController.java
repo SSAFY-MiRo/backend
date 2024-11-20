@@ -2,10 +2,10 @@ package com.ssafy.miro.plan.presentation;
 
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.plan.application.PlanService;
-import com.ssafy.miro.plan.application.response.PlanListResponse;
+import com.ssafy.miro.plan.application.response.PlanDetailResponse;
+import com.ssafy.miro.plan.application.response.PlanItem;
 import com.ssafy.miro.plan.presentation.request.PlanCreateRequest;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,12 +43,13 @@ public class PlanController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Object>> getPlan(@PathVariable Long id) {
-
+        PlanDetailResponse detailResponse = planService.getPlan(id);
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(detailResponse));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<Object>> getPlans() {
-        List<PlanListResponse> plans = planService.getPlans();
+        List<PlanItem> plans = planService.getPlans();
         return ResponseEntity.ok().body(ApiResponse.onSuccess(plans));
     }
 

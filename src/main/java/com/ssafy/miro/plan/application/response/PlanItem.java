@@ -1,21 +1,21 @@
 package com.ssafy.miro.plan.application.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.miro.plan.domain.Plan;
-import jakarta.persistence.JoinColumn;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
-public record PlanListResponse(
+public record PlanItem(
         Long id,
         String title,
         @JsonFormat(pattern = "yyyy.mm.dd")
         Date startDate,
         @JsonFormat(pattern = "yyyy.mm.dd")
-        Date endDate
+        Date endDate,
+        LocalDateTime createAt
 ) {
-    public static PlanListResponse of(Plan plan) {
-        return new PlanListResponse(plan.getId(), plan.getTitle(), plan.getStartDate(),plan.getEndDate());
+    public static PlanItem of(Plan plan) {
+        return new PlanItem(plan.getId(), plan.getTitle(), plan.getStartDate(),plan.getEndDate(), plan.getCreatedAt());
     }
 }
