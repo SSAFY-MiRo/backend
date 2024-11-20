@@ -3,10 +3,10 @@ spring:
     name: miro
 
   profiles:
-    active: dev
+    active: test
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: true
 
