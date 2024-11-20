@@ -3,6 +3,7 @@ package com.ssafy.miro.user.domain;
 import com.ssafy.miro.common.auditing.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String profileImage;
 
+    @Builder
     public User(String authId, String email, String password, String nickname, UserType userType, String profileImage) {
         this.authId = authId;
         this.email = email;
