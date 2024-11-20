@@ -13,5 +13,10 @@ spring:
     show-sql: true
 
   config:
-    import: "classpath:/application-secret.yml"
+    import: ["classpath:/application-secret.yml", "classpath:/application-auth.yml"]
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 6000

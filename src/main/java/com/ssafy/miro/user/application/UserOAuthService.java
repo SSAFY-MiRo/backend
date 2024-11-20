@@ -4,6 +4,7 @@ import com.ssafy.miro.user.domain.dto.LoggedInUser;
 import com.ssafy.miro.user.domain.User;
 import com.ssafy.miro.user.domain.dto.UserProfileDto;
 import com.ssafy.miro.user.domain.UserType;
+import com.ssafy.miro.user.domain.repository.UserOAuthRepository;
 import com.ssafy.miro.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserOAuthService {
     private final UserRepository userRepository;
+    private final UserOAuthRepository userOAuthRepository;
 
     @Value("${oauth2.login-url}")
     private String loginUrl;
@@ -96,7 +98,7 @@ public class UserOAuthService {
 
     public LoggedInUser registerUser(UserProfileDto userProfile) {
         String email = userProfile.getEmail();
-        Optional<User> signedUser = userRepository.findByEmail(email);
+        Optional<User> signedUser = userOAuthRepository.findByEmail(email);
         if (signedUser.isPresent()) {
             return new LoggedInUser(signedUser.get());
         }
@@ -106,7 +108,7 @@ public class UserOAuthService {
                 .nickname(userProfile.getNickname())
                 .password(UUID.randomUUID().toString())
                 .userType(UserType.USER)
-                .profileImage("123123")
+                .profileImage("/oauth-profile")
                 .build();
 
         userRepository.save(user);

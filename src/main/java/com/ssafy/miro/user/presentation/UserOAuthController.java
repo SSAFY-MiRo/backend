@@ -1,9 +1,12 @@
 package com.ssafy.miro.user.presentation;
 
-import com.ssafy.miro.common.jwt.JwtUtil;
+import com.ssafy.miro.common.jwt.JwtProvider;
+import com.ssafy.miro.user.application.Auth;
 import com.ssafy.miro.user.application.UserOAuthService;
+import com.ssafy.miro.user.domain.User;
 import com.ssafy.miro.user.domain.dto.LoggedInUser;
 import com.ssafy.miro.user.domain.dto.UserProfileDto;
+import com.ssafy.miro.user.domain.dto.UserToken;
 import com.ssafy.miro.user.domain.repository.UserOAuthRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +25,7 @@ import java.io.IOException;
 public class UserOAuthController {
     private final UserOAuthRepository userOAuthRepository;
     private final UserOAuthService userOAuthService;
-    private final JwtUtil jwtUtil;
+    private final JwtProvider jwtProvider;
 
     @GetMapping("/login")
     public void login(HttpServletResponse response) throws IOException {
@@ -35,12 +38,21 @@ public class UserOAuthController {
         UserProfileDto userProfile = userOAuthService.getUserProfile(accessToken);
         LoggedInUser loggedInUser = userOAuthService.registerUser(userProfile);
 
-        log.info("loggedInUser: {}", loggedInUser);
-//        String token = jwtUtil.createToken(loggedInUser.getEmail(),
-//                loggedInUser.getNickname(), Instant.now().toEpochMilli());
+
+        log.info("loginUser = {}", loggedInUser);
+        UserToken userToken = jwtProvider.generateAuthToken(loggedInUser.getId());
+
+        log.info("userToken = {}", userToken);
 
 
         return ResponseEntity.ok(new Object());
+    }
+
+    @GetMapping("parseTest")
+    public void parseTest(@Auth User user) throws IOException {
+        Long id = jwtProvider.getId("eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiaWF0IjoxNzMyMTE3MTEyLCJleHAiOjE3MzI5ODExMTJ9.EM5CPwyazau5LzJJZKrJWjpGVXWbDvucwkKWek09cGA");
+        log.info("user = {}", user);
+        log.info("id = {}", id);
     }
 
 }

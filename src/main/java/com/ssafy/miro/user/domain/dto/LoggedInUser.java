@@ -10,12 +10,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class LoggedInUser {
+    private Long id;
     private String nickname;
     private String email;
     private UserType userType;
 
 
     public LoggedInUser(User user) {
+        this.id = user.getId();
         this.nickname = user.getNickname();
         this.email = user.getEmail();
         this.userType = user.getUserType();
