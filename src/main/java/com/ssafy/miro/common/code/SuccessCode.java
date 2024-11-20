@@ -16,6 +16,9 @@ public enum SuccessCode {
     
     //Plan
     CREATE_PLAN(2100, HttpStatus.CREATED, "여행 계획 등록 성공했습니다."),
+
+    //Email
+    VERIFIED_EMAIL(2200, HttpStatus.OK, "이메일 인증 성공했습니다."),
     ;
 
     private final int code;
