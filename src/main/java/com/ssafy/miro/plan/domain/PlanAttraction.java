@@ -2,8 +2,11 @@ package com.ssafy.miro.plan.domain;
 
 import com.ssafy.miro.attraction.domain.Attraction;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Entity(name = "plan_attractions")
 @NoArgsConstructor
@@ -24,4 +27,10 @@ public class PlanAttraction {
     private Integer days;
     private Integer orders;
 
+    public PlanAttraction(Plan newPlan, Attraction findAttraction, Integer day, Integer order) {
+        this.plan = newPlan;
+        this.attraction = findAttraction;
+        this.days = day;
+        this.orders = order;
+    }
 }

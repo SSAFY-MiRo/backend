@@ -1,48 +1,31 @@
 package com.ssafy.miro.user.presentation;
 
-import com.ssafy.miro.common.jwt.JwtUtil;
-import com.ssafy.miro.user.application.UserOAuthService;
-import com.ssafy.miro.user.domain.dto.JwtTokenDto;
-import com.ssafy.miro.user.domain.dto.LoggedInUser;
-import com.ssafy.miro.user.domain.dto.UserProfileDto;
-import com.ssafy.miro.user.domain.repository.UserRepository;
-import jakarta.servlet.http.HttpServletResponse;
+import com.ssafy.miro.common.ApiResponse;
+import com.ssafy.miro.user.application.UserService;
+import com.ssafy.miro.user.application.response.UserInfo;
+import com.ssafy.miro.user.presentation.request.UserCreateRequest;
+import com.ssafy.miro.user.presentation.request.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.time.Instant;
+import java.net.URI;
 
-@Slf4j
 @RestController
-@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
+@RequestMapping("api/v1/user")
 public class UserController {
-    private final UserRepository userRepository;
-    private final UserOAuthService userOAuthService;
-    private final JwtUtil jwtUtil;
+    private final UserService userService;
 
-    @GetMapping("/login")
-    public void login(HttpServletResponse response) throws IOException {
-        response.sendRedirect(userOAuthService.getUrl());
+    @PostMapping
+    public ResponseEntity<ApiResponse<Object>> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+        userService.createUser(userCreateRequest);
+        return ResponseEntity.created(URI.create("/user")).body(null);
     }
 
-    @GetMapping("/login/oauth2/code/google")
-    public ResponseEntity<Object> oauth2Login(String code) {
-        String accessToken = userOAuthService.getToken(code);
-        UserProfileDto userProfile = userOAuthService.getUserProfile(accessToken);
-        LoggedInUser loggedInUser = userOAuthService.registerUser(userProfile);
-
-        log.info("loggedInUser: {}", loggedInUser);
-//        String token = jwtUtil.createToken(loggedInUser.getEmail(),
-//                loggedInUser.getNickname(), Instant.now().toEpochMilli());
-
-
-        return ResponseEntity.ok(new Object());
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<UserInfo>> login(@RequestBody UserLoginRequest userLoginRequest) {
+        UserInfo userInfo = userService.loginUser(userLoginRequest);
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(userInfo));
     }
-
 }
