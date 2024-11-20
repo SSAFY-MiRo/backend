@@ -34,6 +34,9 @@ public enum ErrorCode {
     //Plan
     NOT_FOUND_PLAN_ID(3201, NOT_FOUND, "요청한 ID에 해당하는 여행 계획이 존재하지 않습니다."),
 
+    //Email
+    NOT_FOUND_EMAIL_TOKEN_ID(3201, NOT_FOUND, "이메일 검증에 실패했습니다."),
+
     SERVER_ERROR(4000, INTERNAL_SERVER_ERROR, "서버 에러가 발생하였습니다.");
 
     private final int code;
