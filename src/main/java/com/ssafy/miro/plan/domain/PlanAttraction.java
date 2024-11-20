@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 @Entity(name = "plan_attractions")
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 public class PlanAttraction {
     @Id
