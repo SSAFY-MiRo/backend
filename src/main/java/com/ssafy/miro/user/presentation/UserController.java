@@ -5,11 +5,14 @@ import com.ssafy.miro.user.application.UserService;
 import com.ssafy.miro.user.application.response.UserInfo;
 import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import com.ssafy.miro.user.presentation.request.UserLoginRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+
+import static com.ssafy.miro.common.code.SuccessCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,9 +21,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Object>> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+    public ResponseEntity<ApiResponse<Object>> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {
         userService.createUser(userCreateRequest);
-        return ResponseEntity.created(URI.create("/user")).body(null);
+        return ResponseEntity.created(URI.create("/user")).body(ApiResponse.of(CREATE_USER, null));
     }
 
     @PostMapping("/login")
