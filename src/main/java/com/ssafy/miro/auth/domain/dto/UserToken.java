@@ -1,4 +1,4 @@
-package com.ssafy.miro.user.domain.dto;
+package com.ssafy.miro.auth.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

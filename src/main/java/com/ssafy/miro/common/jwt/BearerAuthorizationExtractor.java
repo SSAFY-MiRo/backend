@@ -1,6 +1,6 @@
 package com.ssafy.miro.common.jwt;
 
-import com.ssafy.miro.user.exception.InvalidJwtException;
+import com.ssafy.miro.auth.exception.InvalidJwtException;
 import org.springframework.stereotype.Component;
 
 import static com.ssafy.miro.common.code.ErrorCode.INVALID_ACCESS_TOKEN;

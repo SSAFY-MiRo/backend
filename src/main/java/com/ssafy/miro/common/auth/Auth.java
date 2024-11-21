@@ -1,4 +1,4 @@
-package com.ssafy.miro.user.application;
+package com.ssafy.miro.common.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
