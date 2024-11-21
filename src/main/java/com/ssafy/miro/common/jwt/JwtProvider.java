@@ -41,7 +41,7 @@ public class JwtProvider {
     public UserToken generateAuthToken(Long id) {
         String accessToken = createToken(id);
         String refreshToken = createToken(id);
-        return new UserToken(accessToken, refreshToken);
+        return new UserToken(id, accessToken, refreshToken);
     }
 
     public void validateTokens(String accessToken, String refreshToken) {
@@ -87,13 +87,13 @@ public class JwtProvider {
 
     }
 
-    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, String accessToken, String refreshToken) {
+    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, Long userId, String accessToken, String refreshToken) {
         Cookie cookie = new Cookie("refresh-token", refreshToken);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(ApiResponse.of(SuccessCode.CREATE_PLAN, new UserTokenResponse("Bearer " + accessToken)));
+        return ResponseEntity.ok(ApiResponse.of(SuccessCode.CREATE_PLAN, new UserTokenResponse(accessToken, userId)));
     }
 }

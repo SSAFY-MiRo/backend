@@ -51,7 +51,7 @@ public class PlanService {
 
     @Transactional
     public void updatePlan(Long id, PlanCreateRequest planCreateRequest) {
-        Plan plan =findPlanById(id);
+        Plan plan = findPlanById(id);
         planAttractionRespository.deleteByPlan(plan);
 
         // PlanAttraction 리스트 생성 및 저장

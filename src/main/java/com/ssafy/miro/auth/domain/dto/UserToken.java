@@ -8,6 +8,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class UserToken {
+    private Long id;
     private String accessToken;
     private String refreshToken;
 }
