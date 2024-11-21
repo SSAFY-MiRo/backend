@@ -1,5 +1,6 @@
 package com.ssafy.miro.user.application;
 
+import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.image.application.ImageService;
 import com.ssafy.miro.user.application.response.UserInfo;
 import com.ssafy.miro.user.domain.User;
@@ -49,7 +50,7 @@ public class UserService {
     public void updateUser(User user, MultipartFile file, UserUpdateRequest userUpdateRequest) throws IOException {
         System.out.println(userUpdateRequest.toString());
         if(!userUpdateRequest.password().equals(userUpdateRequest.passwordConfirm())) {
-            throw new NonValidationPasswordException(NON_VALIDATED_PASSWORD);
+            throw new GlobalException(NON_VALIDATED_PASSWORD);
         }
         if(file != null) {
             // 파일 저장 로직 호출

@@ -51,8 +51,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ApiResponse.onFailure(e.getErrorCode(),null));
     }
 
-    @ExceptionHandler(NonValidationPasswordException.class)
-    public ResponseEntity<Object> handleEmailDuplicateException(final NonValidationPasswordException e) {
+    @ExceptionHandler(GlobalException.class)
+    public ResponseEntity<Object> handleGlobalException(final GlobalException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ApiResponse.onFailure(e.getErrorCode(),null));
     }
 
