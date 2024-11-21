@@ -1,11 +1,14 @@
 package com.ssafy.miro.attraction.presentation;
 
 import com.ssafy.miro.attraction.application.AttractionService;
+import com.ssafy.miro.attraction.application.response.AttractionDetailItem;
 import com.ssafy.miro.attraction.application.response.AttractionListItem;
 import com.ssafy.miro.attraction.application.response.AttractionLikeItem;
 import com.ssafy.miro.attraction.domain.Attraction;
 import com.ssafy.miro.attraction.domain.dto.AttractionSearchFilter;
 import com.ssafy.miro.common.ApiResponse;
+import com.ssafy.miro.common.auth.Auth;
+import com.ssafy.miro.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,17 +42,12 @@ public class AttractionController {
     }
 
     @GetMapping("{no}")
-    public ResponseEntity<ApiResponse<Attraction>> getAttraction(@PathVariable("no") Integer no) {
-        return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.selectAttractionByAttractionNo(no)));
+    public ResponseEntity<ApiResponse<AttractionDetailItem>> getAttraction(@Auth User user, @PathVariable("no") Integer no) {
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.getAttractionDetail(user, no)));
     }
 
     @PatchMapping("/like/{no}")
-    public ResponseEntity<ApiResponse<AttractionLikeItem>> setLikeAttraction(@PathVariable("no") Integer no) {
-        return null;
-    }
-
-    @PatchMapping("/unlike/{no}")
-    public ResponseEntity<ApiResponse<AttractionLikeItem>> setDislikeAttraction(@PathVariable("no") Long no) {
-        return null;
+    public ResponseEntity<ApiResponse<AttractionLikeItem>> setLikeAttraction(@Auth User user, @PathVariable("no") Integer no) {
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.likeHandler(user, no)));
     }
 }

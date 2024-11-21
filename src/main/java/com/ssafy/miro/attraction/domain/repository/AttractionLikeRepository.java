@@ -9,8 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface AttractionLikeRepository extends JpaRepository<AttractionLike, Long> {
-    // Optional이 필수라고 생각하시나요?
-    List<AttractionLike> findAllByAttractionNo(Integer attractionNo);
     void deleteByUserIdAndAttractionNo(Long userId, Integer attractionNo);
     Long countByAttractionNo(Integer attractionNo);
+    boolean existsByUserIdAndAttractionNo(Long userId, Integer attractionNo);
 }
