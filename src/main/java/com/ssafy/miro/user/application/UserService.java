@@ -4,6 +4,7 @@ import com.ssafy.miro.user.application.response.UserInfo;
 import com.ssafy.miro.user.domain.User;
 import com.ssafy.miro.user.domain.repository.UserRepository;
 import com.ssafy.miro.user.exception.EmailDuplicateException;
+import com.ssafy.miro.user.exception.NonValidationPasswordException;
 import com.ssafy.miro.user.exception.UserNotFoundException;
 import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import com.ssafy.miro.user.presentation.request.UserLoginRequest;
@@ -25,11 +26,22 @@ public class UserService {
     }
 
     public UserInfo loginUser(UserLoginRequest userLoginRequest) {
-        User user=findByEmail(userLoginRequest.email()).orElseThrow(()->new UserNotFoundException(NOT_FOUND_USER_EMAIL));
+        User user=findUserByEmail(userLoginRequest.email());
         return UserInfo.of(user);
     }
 
-    public Optional<User> findByEmail(String email) {
+    public void validatePassword(String email, String password) {
+        User user=findUserByEmail(email);
+        if(!user.getPassword().equals(password)) {
+            throw new NonValidationPasswordException(NON_VALIDATED_PASSWORD);
+        }
+    }
+    private Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+
+    private User findUserByEmail(String email) {
+        return findByEmail(email).orElseThrow(()->new UserNotFoundException(NOT_FOUND_USER_EMAIL));
     }
 }

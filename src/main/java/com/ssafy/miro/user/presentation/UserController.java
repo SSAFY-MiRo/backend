@@ -3,6 +3,7 @@ package com.ssafy.miro.user.presentation;
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.user.application.UserService;
 import com.ssafy.miro.user.application.response.UserInfo;
+import com.ssafy.miro.user.presentation.request.UserCheckPwdRequest;
 import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import com.ssafy.miro.user.presentation.request.UserLoginRequest;
 import jakarta.validation.Valid;
@@ -27,8 +28,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<UserInfo>> login(@RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<ApiResponse<UserInfo>> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
         UserInfo userInfo = userService.loginUser(userLoginRequest);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(userInfo));
+    }
+
+    @PostMapping("/verify-password")
+    public ResponseEntity<ApiResponse<Object>> checkPassword(@RequestBody @Valid UserCheckPwdRequest userCheckPwdRequest) {
+        userService.validatePassword("asdf", userCheckPwdRequest.password());
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
 }
