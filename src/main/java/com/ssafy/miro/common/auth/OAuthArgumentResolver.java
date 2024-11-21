@@ -18,6 +18,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -51,9 +52,13 @@ public class OAuthArgumentResolver implements HandlerMethodArgumentResolver {
 
             Long id = jwtProvider.getId(accessToken);
 
-            return userRepository.findById(id).orElseThrow(()->new GlobalException(ErrorCode.NOT_FOUND_USER_ID));
+            Optional<User> user = userRepository.findById(id);
+            if (user.isPresent()) return user.get();
+            else if (parameter.hasParameterAnnotation(NonEssential.class)) return null;
 
+            throw new GlobalException(ErrorCode.INVALID_USER_LOGGED_IN);
         } catch (Exception e) {
+            if (parameter.hasParameterAnnotation(NonEssential.class)) throw new GlobalException(ErrorCode.INVALID_USER_LOGGED_IN);
             return null;
         }
     }

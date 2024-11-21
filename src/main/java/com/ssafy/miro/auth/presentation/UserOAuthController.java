@@ -40,9 +40,4 @@ public class UserOAuthController {
                 userToken.getRefreshToken());
     }
 
-    @GetMapping("parseTest")
-    public void parseTest(@Auth User user) {
-        log.info("user = {}", user);
-    }
-
 }
