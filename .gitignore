@@ -6,7 +6,8 @@ build/
 !**/src/test/**/build/
 
 src/main/resources/application-secret.yml
-/src/main/resources/application-auth.yml
+src/main/resources/application-auth.yml
+uploads
 
 ### STS ###
 .apt_generated
