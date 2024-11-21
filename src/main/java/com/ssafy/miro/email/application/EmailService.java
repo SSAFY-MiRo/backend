@@ -44,7 +44,7 @@ public class EmailService {
     }
 
     public void verifyEmail(String verificationCode) {
-        String emailByToken = redisTokenService.getEmailByToken(emailPrefix+verificationCode);
+        String emailByToken = redisTokenService.getToken(emailPrefix+verificationCode);
         if(emailByToken==null) {
             throw new EmailTokenNotFoundException(NOT_FOUND_EMAIL_TOKEN_ID);
         }
