@@ -1,11 +1,12 @@
 package com.ssafy.miro.common.jwt;
 
 
-import com.ssafy.miro.auth.exception.InvalidJwtException;
+
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.code.SuccessCode;
 import com.ssafy.miro.auth.application.response.UserTokenResponse;
 import com.ssafy.miro.auth.domain.dto.UserToken;
+import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.common.redis.RedisTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -14,8 +15,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +29,12 @@ import static com.ssafy.miro.common.code.ErrorCode.*;
 
 @Slf4j
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class JwtProvider {
     @Value("${jwt.secret}")
     private String key;
     private SecretKey secretKey;
+    private final RedisTokenService redisTokenService;
 
     @PostConstruct
     public void init() {
@@ -43,6 +44,8 @@ public class JwtProvider {
     public UserToken generateAuthToken(Long id) {
         String accessToken = createToken(id);
         String refreshToken = createToken(id);
+
+        redisTokenService.saveToken(refreshToken, String.valueOf(id), 3600);
         return new UserToken(id, accessToken, refreshToken);
     }
 
@@ -58,8 +61,11 @@ public class JwtProvider {
     private void validateRefreshToken(String refreshToken) {
         try {
             parseToken(refreshToken);
+
+            String userId = redisTokenService.getToken(refreshToken);
+            if (userId == null) throw new GlobalException(INVALID_REFRESH_TOKEN);
         } catch (Exception e) {
-            throw new InvalidJwtException(INVALID_REFRESH_TOKEN);
+            throw new GlobalException(INVALID_REFRESH_TOKEN);
         }
     }
 
@@ -67,7 +73,7 @@ public class JwtProvider {
         try {
             parseToken(token);
         } catch (Exception e) {
-            throw new InvalidJwtException(INVALID_ACCESS_TOKEN);
+            throw new GlobalException(INVALID_ACCESS_TOKEN);
         }
     }
 
@@ -88,13 +94,13 @@ public class JwtProvider {
                 .signWith(secretKey).compact();
     }
 
-    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, Long userId, String accessToken, String refreshToken) {
+    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, String accessToken, String refreshToken) {
         Cookie cookie = new Cookie("refresh-token", refreshToken);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(ApiResponse.of(SuccessCode.CREATE_PLAN, new UserTokenResponse(accessToken, userId)));
+        return ResponseEntity.ok(ApiResponse.of(SuccessCode.CREATE_PLAN, new UserTokenResponse(accessToken)));
     }
 }
