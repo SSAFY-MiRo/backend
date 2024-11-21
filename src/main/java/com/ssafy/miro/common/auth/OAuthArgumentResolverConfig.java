@@ -1,4 +1,4 @@
-package com.ssafy.miro.user.application;
+package com.ssafy.miro.common.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

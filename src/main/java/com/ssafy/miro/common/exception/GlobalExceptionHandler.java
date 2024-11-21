@@ -3,6 +3,7 @@ package com.ssafy.miro.common.exception;
 import com.ssafy.miro.article.exception.ArticleNotFoundException;
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.plan.exception.PlanNotFoundException;
+import com.ssafy.miro.user.exception.EmailDuplicateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(PlanNotFoundException.class)
     public ResponseEntity<Object> handlePlanNotFoundException(final PlanNotFoundException e) {
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ApiResponse.onFailure(e.getErrorCode(),null));
+    }
+
+    @ExceptionHandler(EmailDuplicateException.class)
+    public ResponseEntity<Object> handleEmailDuplicateException(final EmailDuplicateException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ApiResponse.onFailure(e.getErrorCode(),null));
     }
 

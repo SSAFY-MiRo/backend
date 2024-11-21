@@ -1,16 +1,12 @@
-package com.ssafy.miro.user.presentation;
+package com.ssafy.miro.auth.presentation;
 
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.jwt.JwtProvider;
-import com.ssafy.miro.user.application.Auth;
-import com.ssafy.miro.user.application.UserOAuthService;
-import com.ssafy.miro.user.application.response.UserTokenResponse;
+import com.ssafy.miro.common.auth.Auth;
+import com.ssafy.miro.auth.application.UserOAuthService;
+import com.ssafy.miro.auth.application.response.UserTokenResponse;
 import com.ssafy.miro.user.domain.User;
-import com.ssafy.miro.user.domain.dto.AuthTokenDto;
-import com.ssafy.miro.user.domain.dto.LoggedInUser;
-import com.ssafy.miro.user.domain.dto.UserProfileDto;
-import com.ssafy.miro.user.domain.dto.UserToken;
-import com.ssafy.miro.user.domain.repository.UserOAuthRepository;
+import com.ssafy.miro.auth.domain.dto.UserToken;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +22,6 @@ import java.io.IOException;
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserOAuthController {
-    private final UserOAuthRepository userOAuthRepository;
     private final UserOAuthService userOAuthService;
     private final JwtProvider jwtProvider;
 
@@ -37,17 +32,9 @@ public class UserOAuthController {
 
     @GetMapping("/login/oauth2/code/google")
     public ResponseEntity<ApiResponse<UserTokenResponse>> oauth2Login(String code, HttpServletResponse response) throws IOException {
-        AuthTokenDto tokenDto = userOAuthService.getToken(code);
-        log.info("accessToken = {}", tokenDto);
-        UserProfileDto userProfile = userOAuthService.getUserProfile(tokenDto);
-        LoggedInUser loggedInUser = userOAuthService.registerUser(userProfile);
-
-
-        log.info("loginUser = {}", loggedInUser);
-        UserToken userToken = jwtProvider.generateAuthToken(loggedInUser.getId());
-
-        log.info("userToken = {}", userToken);
-
+        String accessToken = userOAuthService.getToken(code);
+        log.info("accessToken = {}", accessToken);
+        UserToken userToken = userOAuthService.getUserToken(accessToken);
         return jwtProvider.sendToken(response, userToken.getAccessToken(), userToken.getRefreshToken());
     }
 
