@@ -3,10 +3,20 @@ spring:
     name: miro
 
   profiles:
+    include: auth
     active: dev
 
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: create
     show-sql: true
 
+  config:
+    import: "classpath:/application-secret.yml"
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 6000
