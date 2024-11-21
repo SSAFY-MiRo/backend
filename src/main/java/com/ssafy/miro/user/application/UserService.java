@@ -20,9 +20,9 @@ import static com.ssafy.miro.common.code.ErrorCode.*;
 public class UserService {
     private final UserRepository userRepository;
 
-    public void createUser(UserCreateRequest userCreateRequest) {
+    public Long createUser(boolean isOAuth, UserCreateRequest userCreateRequest) {
         findByEmail(userCreateRequest.email()).ifPresent(user->{throw new EmailDuplicateException(EMAIL_DUPLICATED);});
-        userRepository.save(userCreateRequest.toUser());
+        return userRepository.save(userCreateRequest.toUser(isOAuth)).getId();
     }
 
     public UserInfo loginUser(UserLoginRequest userLoginRequest) {
@@ -47,7 +47,7 @@ public class UserService {
     }
 
 
-    private Optional<User> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 

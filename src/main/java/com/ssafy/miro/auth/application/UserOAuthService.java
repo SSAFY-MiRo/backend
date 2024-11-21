@@ -1,12 +1,9 @@
-package com.ssafy.miro.user.application;
+package com.ssafy.miro.auth.application;
 
-import com.ssafy.miro.user.domain.dto.AuthTokenDto;
-import com.ssafy.miro.user.domain.dto.LoggedInUser;
+import com.ssafy.miro.common.jwt.JwtProvider;
+import com.ssafy.miro.user.application.UserService;
 import com.ssafy.miro.user.domain.User;
-import com.ssafy.miro.user.domain.dto.UserProfileDto;
-import com.ssafy.miro.user.domain.UserType;
-import com.ssafy.miro.user.domain.repository.UserOAuthRepository;
-import com.ssafy.miro.user.domain.repository.UserRepository;
+import com.ssafy.miro.auth.domain.dto.UserToken;
 import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,16 +15,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserOAuthService {
-    private final UserRepository userRepository;
-    private final UserOAuthRepository userOAuthRepository;
     private final UserService userService;
+    private final JwtProvider jwtProvider;
 
     @Value("${oauth2.login-url}")
     private String loginUrl;
@@ -47,12 +42,11 @@ public class UserOAuthService {
                 + "&response_type=code&scope=email profile";
     }
 
-    public AuthTokenDto getToken(String code) {
+    public String getToken(String code) {
         WebClient webClient = WebClient
                 .builder()
                 .baseUrl("https://oauth2.googleapis.com")
                 .build();
-
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("code", code);
@@ -72,13 +66,10 @@ public class UserOAuthService {
                 .block();
 
         if (response == null) return null;
-        return new AuthTokenDto(
-                (String) response.get("access_token"),
-                code
-        );
+        return (String) response.get("access_token");
     }
 
-    public UserProfileDto getUserProfile(AuthTokenDto tokenDto) {
+    public UserCreateRequest getUserProfile(String accessToken) {
         WebClient webClient = WebClient
                 .builder()
                 .baseUrl("https://www.googleapis.com")
@@ -87,7 +78,7 @@ public class UserOAuthService {
         Map<String, Object> response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("userinfo/v2/me")
-                        .queryParam("access_token", tokenDto.accessToken())
+                        .queryParam("access_token", accessToken)
                         .build())
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
@@ -96,27 +87,15 @@ public class UserOAuthService {
         String email = (String) response.get("email");
         String name = (String) response.get("name");
 
-        return new UserProfileDto(tokenDto.code(), email, name);
+        return new UserCreateRequest(email, UUID.randomUUID().toString(), name);
     }
 
-    public LoggedInUser registerUser(UserProfileDto userProfile) {
-        String email = userProfile.getEmail();
-        Optional<User> signedUser = userOAuthRepository.findByEmail(email);
-        if (signedUser.isPresent()) {
-            return new LoggedInUser(signedUser.get());
-        }
+    public UserToken getUserToken(String accessToken) {
+        UserCreateRequest userProfile = getUserProfile(accessToken);
+        Long id = userService.findByEmail(userProfile.email())
+                .map(User::getId)  // if user exists
+                .orElseGet(() -> userService.createUser(true, userProfile));
 
-        User user = User.builder()
-                .authId(userProfile.getAuthId())
-                .email(userProfile.getEmail())
-                .nickname(userProfile.getNickname())
-                .password(UUID.randomUUID().toString())
-                .userType(UserType.USER)
-                .profileImage("/oauth-profile")
-                .build();
-
-        User savedUser = userRepository.save(user);
-
-        return new LoggedInUser(savedUser);
+        return jwtProvider.generateAuthToken(id);
     }
 }

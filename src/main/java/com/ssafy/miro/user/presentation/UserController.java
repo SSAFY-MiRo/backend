@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Object>> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {
-        userService.createUser(userCreateRequest);
+        userService.createUser(false, userCreateRequest);
         return ResponseEntity.created(URI.create("/user")).body(ApiResponse.of(CREATE_USER, null));
     }
 

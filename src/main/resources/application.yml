@@ -13,7 +13,7 @@ spring:
     show-sql: true
 
   config:
-    import: ["classpath:/application-secret.yml", "classpath:/application-auth.yml"]
+    import: "classpath:/application-secret.yml"
 
   data:
     redis:
