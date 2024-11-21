@@ -1,10 +1,12 @@
 package com.ssafy.miro.plan.presentation;
 
 import com.ssafy.miro.common.ApiResponse;
+import com.ssafy.miro.common.auth.Auth;
 import com.ssafy.miro.plan.application.PlanService;
 import com.ssafy.miro.plan.application.response.PlanDetailResponse;
 import com.ssafy.miro.plan.application.response.PlanItem;
 import com.ssafy.miro.plan.presentation.request.PlanCreateRequest;
+import com.ssafy.miro.user.domain.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,34 +24,32 @@ public class PlanController {
     private final PlanService planService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Object>> createPlan(@Valid @RequestBody PlanCreateRequest planCreateRequest) {
-        //사용자 해야함
-
-        planService.save(planCreateRequest);
+    public ResponseEntity<ApiResponse<Object>> createPlan(@Auth User user, @Valid @RequestBody PlanCreateRequest planCreateRequest) {
+        planService.save(user, planCreateRequest);
         return ResponseEntity.ok().body(ApiResponse.of(CREATE_PLAN, null));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> deletePlan(@PathVariable Long id) {
-        planService.deletePlan(id);
+    public ResponseEntity<ApiResponse<Object>> deletePlan(@Auth User user, @PathVariable Long id) {
+        planService.deletePlan(user, id);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> updatePlan(@PathVariable Long id, @RequestBody PlanCreateRequest planCreateRequest) {
-        planService.updatePlan(id, planCreateRequest);
+    public ResponseEntity<ApiResponse<Object>> updatePlan(@Auth User user, @PathVariable Long id, @RequestBody PlanCreateRequest planCreateRequest) {
+        planService.updatePlan(user, id, planCreateRequest);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> getPlan(@PathVariable Long id) {
-        PlanDetailResponse detailResponse = planService.getPlan(id);
+    public ResponseEntity<ApiResponse<Object>> getPlan(@Auth User user, @PathVariable Long id) {
+        PlanDetailResponse detailResponse = planService.getPlan(user, id);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(detailResponse));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Object>> getPlans() {
-        List<PlanItem> plans = planService.getPlans();
+    public ResponseEntity<ApiResponse<Object>> getPlans(@Auth User user) {
+        List<PlanItem> plans = planService.getPlans(user);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(plans));
     }
 

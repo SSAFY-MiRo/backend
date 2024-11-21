@@ -17,7 +17,7 @@ public class RedisTokenService {
     }
 
     // 토큰 조회
-    public String getEmailByToken(String key) {
+    public String getToken(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
