@@ -45,8 +45,12 @@ public class OAuthArgumentResolver implements HandlerMethodArgumentResolver {
         try {
             String refreshToken = extractRefreshToken(request.getCookies());
             String accessToken = bearerAuthorizationExtractor.extractAccessToken(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
+
+            System.out.println(accessToken + " " + refreshToken);
             jwtProvider.validateTokens(accessToken, refreshToken);
+
             Long id = jwtProvider.getId(accessToken);
+
             return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(ErrorCode.NOT_FOUND_USER_ID));
         } catch (Exception e) {
             return null;

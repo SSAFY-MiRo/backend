@@ -43,7 +43,14 @@ public class User extends BaseEntity {
         this.isOAuth = isOAuth;
     }
 
-//    public void updateIsOAuth() {
-//        this.isOAuth=true;
-//    }
+    public void updateUserWithImage(String nickname,String password, String profileImage) {
+        this.nickname = nickname;
+        this.password = password;
+        this.profileImage = profileImage;
+    }
+
+    public void updateUser(String nickname,String password) {
+        this.nickname = nickname;
+        this.password = password;
+    }
 }

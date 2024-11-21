@@ -4,6 +4,7 @@ import com.ssafy.miro.article.exception.ArticleNotFoundException;
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.plan.exception.PlanNotFoundException;
 import com.ssafy.miro.user.exception.EmailDuplicateException;
+import com.ssafy.miro.user.exception.NonValidationPasswordException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.io.IOException;
 
 import static com.ssafy.miro.common.code.ErrorCode.*;
 
@@ -46,6 +49,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EmailDuplicateException.class)
     public ResponseEntity<Object> handleEmailDuplicateException(final EmailDuplicateException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ApiResponse.onFailure(e.getErrorCode(),null));
+    }
+
+    @ExceptionHandler(GlobalException.class)
+    public ResponseEntity<Object> handleGlobalException(final GlobalException e) {
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(ApiResponse.onFailure(e.getErrorCode(),null));
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Object> handleIOException(final IOException e) {
+        return ResponseEntity.status(FAIL_IMAGE_UPLOAD.getHttpStatus()).body(ApiResponse.onFailure(FAIL_IMAGE_UPLOAD,null));
     }
 
     @ExceptionHandler(Exception.class)
