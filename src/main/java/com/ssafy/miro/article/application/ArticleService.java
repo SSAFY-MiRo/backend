@@ -17,9 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 import static com.ssafy.miro.common.code.ErrorCode.NOT_FOUND_BOARD_ID;
 
 @Transactional(readOnly = true)
