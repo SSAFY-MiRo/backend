@@ -1,18 +1,26 @@
 package com.ssafy.miro.user.presentation;
 
 import com.ssafy.miro.common.ApiResponse;
+import com.ssafy.miro.common.auth.Auth;
+import com.ssafy.miro.image.application.ImageService;
 import com.ssafy.miro.user.application.UserService;
 import com.ssafy.miro.user.application.response.UserInfo;
+import com.ssafy.miro.user.domain.User;
 import com.ssafy.miro.user.presentation.request.UserCheckPwdRequest;
 import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import com.ssafy.miro.user.presentation.request.UserLoginRequest;
+import com.ssafy.miro.user.presentation.request.UserUpdateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URI;
 
+import static com.ssafy.miro.common.code.ErrorCode.*;
 import static com.ssafy.miro.common.code.SuccessCode.*;
 
 @RestController
@@ -20,10 +28,11 @@ import static com.ssafy.miro.common.code.SuccessCode.*;
 @RequestMapping("api/v1/user")
 public class UserController {
     private final UserService userService;
+    private final ImageService imageService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<Object>> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {
-        userService.createUser(userCreateRequest);
+        userService.createUser(false, userCreateRequest);
         return ResponseEntity.created(URI.create("/user")).body(ApiResponse.of(CREATE_USER, null));
     }
 
@@ -44,4 +53,11 @@ public class UserController {
         UserInfo userInfo = userService.getUserInfo(1L);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(userInfo));
     }
+
+    @PutMapping(consumes = "multipart/form-data")
+    public ResponseEntity<ApiResponse<Object>> uploadImage(@Auth User user, @RequestParam("file") MultipartFile file, @ModelAttribute @Valid UserUpdateRequest userUpdateRequest) throws IOException {
+        userService.updateUser(user, file, userUpdateRequest);
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
+    }
+
 }

@@ -10,7 +10,6 @@ public record UserInfo(
     String imageUrl
 ) {
     public static UserInfo of(User user){
-        boolean isAuth = user.getAuthId() != null;
-        return new UserInfo(isAuth, user.getId(), user.getNickname(), user.getProfileImage());
+        return new UserInfo(user.isOAuth(), user.getId(), user.getNickname(), user.getProfileImage());
     }
 }
