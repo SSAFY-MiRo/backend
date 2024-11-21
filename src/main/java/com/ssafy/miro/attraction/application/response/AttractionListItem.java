@@ -2,7 +2,7 @@ package com.ssafy.miro.attraction.application.response;
 
 import com.ssafy.miro.attraction.domain.Attraction;
 
-public record AttractionItem(
+public record AttractionListItem(
         Integer contentTypeId,
         Long view,
         String title,
@@ -11,8 +11,8 @@ public record AttractionItem(
         String homepage,
         String overview
 ) {
-    public static AttractionItem of(Attraction attraction) {
-        return new AttractionItem(
+    public static AttractionListItem of(Attraction attraction) {
+        return new AttractionListItem(
                 attraction.getContentType().getId(),
                 attraction.getView(),
                 attraction.getTitle(),
