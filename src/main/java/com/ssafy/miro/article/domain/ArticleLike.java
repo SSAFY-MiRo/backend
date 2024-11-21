@@ -21,5 +21,8 @@ public class ArticleLike {
     @JoinColumn(name = "article_id")
     private Article article;
 
-
+    public ArticleLike(final User user, final Article article) {
+        this.user = user;
+        this.article = article;
+    }
 }

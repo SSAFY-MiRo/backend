@@ -1,12 +1,9 @@
 package com.ssafy.miro.email.application;
 
+import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.common.redis.RedisTokenService;
-import com.ssafy.miro.email.exception.EmailTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -46,7 +43,7 @@ public class EmailService {
     public void verifyEmail(String verificationCode) {
         String emailByToken = redisTokenService.getToken(emailPrefix+verificationCode);
         if(emailByToken==null) {
-            throw new EmailTokenNotFoundException(NOT_FOUND_EMAIL_TOKEN_ID);
+            throw new GlobalException(NOT_FOUND_EMAIL_TOKEN_ID);
         }
         redisTokenService.deleteToken(emailPrefix+verificationCode);
 
