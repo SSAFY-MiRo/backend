@@ -20,6 +20,5 @@ public class UserService {
     public UserInfo loginUser(UserLoginRequest userLoginRequest) {
         User user = userRepository.findByEmail(userLoginRequest.email());
         return UserInfo.of(user);
-
     }
 }
