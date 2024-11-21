@@ -2,14 +2,13 @@ package com.ssafy.miro.comment.application;
 
 import com.ssafy.miro.article.domain.Article;
 import com.ssafy.miro.article.domain.repository.ArticleRepository;
-import com.ssafy.miro.article.exception.ArticleNotFoundException;
 import com.ssafy.miro.comment.application.response.CommentItem;
 import com.ssafy.miro.comment.domain.Comment;
 import com.ssafy.miro.comment.domain.repository.CommentRepository;
-import com.ssafy.miro.comment.exception.CommentNotFoundException;
 import com.ssafy.miro.comment.presentation.request.CommentAddRequest;
 import com.ssafy.miro.comment.presentation.request.CommentUpdateRequest;
 import com.ssafy.miro.common.code.ErrorCode;
+import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,12 +31,12 @@ public class CommentService {
     }
 
     public Comment insertComment(User user, CommentAddRequest comment) {
-        Article article = articleRepository.findById(comment.getArticleId()).orElseThrow(() -> new ArticleNotFoundException(ErrorCode.NOT_FOUND_BOARD_ID)   );
+        Article article = articleRepository.findById(comment.getArticleId()).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BOARD_ID));
         return commentRepository.save(comment.toComment(user, article, comment.getContent()));
     }
 
     public Long updateComment(User user, CommentUpdateRequest updatedComment) {
-        Comment comment = commentRepository.findById(updatedComment.getId()).orElseThrow(() -> new CommentNotFoundException(ErrorCode.NOT_FOUND_COMMENT_ID));
+        Comment comment = commentRepository.findById(updatedComment.getId()).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_COMMENT_ID));
         isValidUserAccess(user, comment);
         comment.updateComment(updatedComment.getContent());
         return comment.getId();

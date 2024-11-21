@@ -8,7 +8,6 @@ import com.ssafy.miro.attraction.domain.AttractionLike;
 import com.ssafy.miro.attraction.domain.dto.AttractionSearchFilter;
 import com.ssafy.miro.attraction.domain.repository.AttractionLikeRepository;
 import com.ssafy.miro.attraction.domain.repository.AttractionRepository;
-import com.ssafy.miro.attraction.exception.AttractionNotFoundException;
 import com.ssafy.miro.common.code.ErrorCode;
 import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.user.domain.User;
@@ -58,17 +57,21 @@ public class AttractionService {
             return AttractionLikeItem.of(attractionLikeRepository.countByAttractionNo(attractionNo), false);
         }
 
-        Attraction attraction = attractionRepository.findById(attractionNo).orElseThrow(() -> new AttractionNotFoundException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
+        Attraction attraction = attractionRepository.findById(attractionNo).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
         attractionLikeRepository.save(new AttractionLike(attraction, user));
         return AttractionLikeItem.of(attractionLikeRepository.countByAttractionNo(attractionNo), true);
     }
 
     public AttractionDetailItem getAttractionDetail(User user, Integer attractionNo) {
-        Attraction attraction = attractionRepository.findById(attractionNo).orElseThrow(() -> new AttractionNotFoundException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
+        Attraction attraction = attractionRepository.findById(attractionNo).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
         AttractionLikeItem attractionLikeItem = getAttractionLikeInfo(user, attractionNo);
 
         attraction.increaseViewCount();
         return AttractionDetailItem.of(attraction, attractionLikeItem);
+    }
+
+    public Attraction findAttractionById(Integer no) {
+        return attractionRepository.findById(no).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
     }
 
     private AttractionLikeItem getAttractionLikeInfo(User user, Integer attractionNo) {
@@ -77,10 +80,5 @@ public class AttractionService {
         return new AttractionLikeItem(
                 attractionLikeRepository.countByAttractionNo(attractionNo),
                 attractionLike);
-    }
-
-    private Attraction selectAttractionByAttractionNo(Integer attractionNo) {
-        return attractionRepository.findById(attractionNo)
-                .orElseThrow(() -> new AttractionNotFoundException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
     }
 }
