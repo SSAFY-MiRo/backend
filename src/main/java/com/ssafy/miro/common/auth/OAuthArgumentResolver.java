@@ -48,7 +48,6 @@ public class OAuthArgumentResolver implements HandlerMethodArgumentResolver {
             String refreshToken = extractRefreshToken(request.getCookies());
             String accessToken = bearerAuthorizationExtractor.extractAccessToken(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
 
-            System.out.println(accessToken + " " + refreshToken);
             jwtProvider.validateTokens(accessToken, refreshToken);
 
             Long id = jwtProvider.getId(accessToken);
