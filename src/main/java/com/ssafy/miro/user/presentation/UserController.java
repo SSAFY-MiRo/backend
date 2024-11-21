@@ -39,9 +39,9 @@ public class UserController {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
 
-    @PutMapping
-    public ResponseEntity<ApiResponse<Object>> getUserInfo(@RequestBody @Valid UserInfo userInfo) {
-
+    @GetMapping
+    public ResponseEntity<ApiResponse<Object>> getUserInfo() {
+        UserInfo userInfo = userService.getUserInfo(1L);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(userInfo));
     }
 }

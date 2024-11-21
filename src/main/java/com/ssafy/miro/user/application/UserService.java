@@ -36,6 +36,17 @@ public class UserService {
             throw new NonValidationPasswordException(NON_VALIDATED_PASSWORD);
         }
     }
+
+    public UserInfo getUserInfo(Long id) {
+        User user=findById(id);
+        return UserInfo.of(user);
+    }
+
+    private User findById(Long id){
+        return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(NOT_FOUND_USER_ID));
+    }
+
+
     private Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
