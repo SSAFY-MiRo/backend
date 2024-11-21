@@ -2,7 +2,10 @@ package com.ssafy.miro.user.domain;
 
 import com.ssafy.miro.common.auditing.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.Pattern;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity(name = "users")
@@ -15,6 +18,8 @@ public class User extends BaseEntity {
     @Column(length = 100)
     private String authId;
     @Column(nullable = false, unique = true, length = 30)
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            message = "Invalid email format")
     private String email;
     @Column(nullable = false, length = 100)
     private String password;

@@ -19,6 +19,9 @@ public enum SuccessCode {
 
     //Email
     VERIFIED_EMAIL(2200, HttpStatus.OK, "이메일 인증 성공했습니다."),
+
+    //User
+    CREATE_USER(2100, HttpStatus.CREATED, "사용자 등록 성공했습니다."),
     ;
 
     private final int code;

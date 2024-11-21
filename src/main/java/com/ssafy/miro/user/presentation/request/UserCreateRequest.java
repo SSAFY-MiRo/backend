@@ -8,7 +8,8 @@ import jakarta.validation.constraints.Pattern;
 public record UserCreateRequest(
         String authId,
         @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-                message = "Invalid email format") String email,
+                message = "Invalid email format")
+        String email,
         @NotBlank String password,
         @NotBlank String nickName
 ) {
