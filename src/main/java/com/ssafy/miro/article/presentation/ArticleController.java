@@ -41,6 +41,7 @@ public class ArticleController {
                                                                      @RequestParam(name = "search", required = false) String search,
                                                                      @RequestParam(name = "search-type", required = false) ArticleSearchType searchType,
                                                                      @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        
         return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoards(articleCategory, search, searchType, pageable)));
     }
 

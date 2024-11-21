@@ -42,7 +42,12 @@ public class UserOAuthService {
                 + "&response_type=code&scope=email profile";
     }
 
-    public String getToken(String code) {
+    public UserToken authenticateUser(String code) {
+        String token = getOAuthToken(code);
+        return getUserToken(token);
+    }
+
+    private String getOAuthToken(String code) {
         WebClient webClient = WebClient
                 .builder()
                 .baseUrl("https://oauth2.googleapis.com")
@@ -69,7 +74,7 @@ public class UserOAuthService {
         return (String) response.get("access_token");
     }
 
-    public UserCreateRequest getUserProfile(String accessToken) {
+    private UserCreateRequest getUserProfile(String accessToken) {
         WebClient webClient = WebClient
                 .builder()
                 .baseUrl("https://www.googleapis.com")
@@ -90,7 +95,7 @@ public class UserOAuthService {
         return new UserCreateRequest(email, UUID.randomUUID().toString(), name);
     }
 
-    public UserToken getUserToken(String accessToken) {
+    private UserToken getUserToken(String accessToken) {
         UserCreateRequest userProfile = getUserProfile(accessToken);
         Long id = userService.findByEmail(userProfile.email())
                 .map(User::getId)  // if user exists
