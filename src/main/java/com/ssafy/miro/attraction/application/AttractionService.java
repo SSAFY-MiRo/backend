@@ -3,8 +3,6 @@ package com.ssafy.miro.attraction.application;
 import com.ssafy.miro.attraction.application.response.AttractionListItem;
 import com.ssafy.miro.attraction.domain.Attraction;
 import com.ssafy.miro.attraction.domain.dto.AttractionSearchFilter;
-import com.ssafy.miro.attraction.domain.exception.AttractionNotFoundException;
-import com.ssafy.miro.attraction.domain.item.AttractionItem;
 import com.ssafy.miro.attraction.domain.repository.AttractionRespository;
 import com.ssafy.miro.common.code.ErrorCode;
 import com.ssafy.miro.common.exception.GlobalException;
@@ -47,8 +45,8 @@ public class AttractionService {
         return result;
     }
 
-    public Attraction selectAttractionByAttractionNo(Integer attractionId) {
-        return attractionRespository.findById(attractionId)
-                .orElseThrow(() -> new AttractionNotFoundException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
-    }
+//    public Attraction selectAttractionByAttractionNo(Integer attractionId) {
+//        return attractionRespository.findById(attractionId)
+//                .orElseThrow(() -> new AttractionNotFoundException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
+//    }
 }

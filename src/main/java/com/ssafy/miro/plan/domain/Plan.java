@@ -19,9 +19,9 @@ public class Plan extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
     @Column(nullable = false, length = 100)
     private String title;
     @Column(nullable = false, length = 30)
@@ -32,8 +32,8 @@ public class Plan extends BaseEntity {
     private Date startDate;
     private Date endDate;
 
-
-    public Plan(String title, String location, PlanAccessLevel planAccessLevel, Date startDate, Date endDate) {
+    public Plan(User user, String title, String location, PlanAccessLevel planAccessLevel, Date startDate, Date endDate) {
+        this.user = user;
         this.title = title;
         this.location = location;
         this.accessLevel = planAccessLevel;
@@ -41,8 +41,9 @@ public class Plan extends BaseEntity {
         this.endDate = endDate;
     }
 
-    public static Plan of(PlanInfo planInfo) {
+    public static Plan of(User user, PlanInfo planInfo) {
         return new Plan(
+                user,
                 planInfo.title(),
                 planInfo.location(),
                 PlanAccessLevel.PRIVATE,
