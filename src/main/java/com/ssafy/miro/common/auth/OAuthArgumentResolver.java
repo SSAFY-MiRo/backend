@@ -52,7 +52,6 @@ public class OAuthArgumentResolver implements HandlerMethodArgumentResolver {
             Long id = jwtProvider.getId(accessToken);
 
             return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(ErrorCode.NOT_FOUND_USER_ID));
-
         } catch (Exception e) {
             return null;
         }
