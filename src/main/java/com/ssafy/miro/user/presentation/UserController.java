@@ -38,4 +38,10 @@ public class UserController {
         userService.validatePassword("asdf", userCheckPwdRequest.password());
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
+
+    @PutMapping
+    public ResponseEntity<ApiResponse<Object>> getUserInfo(@RequestBody @Valid UserInfo userInfo) {
+
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(userInfo));
+    }
 }
