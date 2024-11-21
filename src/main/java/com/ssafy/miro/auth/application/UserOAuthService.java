@@ -1,6 +1,7 @@
 package com.ssafy.miro.auth.application;
 
 import com.ssafy.miro.common.jwt.JwtProvider;
+import com.ssafy.miro.common.redis.RedisTokenService;
 import com.ssafy.miro.user.application.UserService;
 import com.ssafy.miro.user.domain.User;
 import com.ssafy.miro.auth.domain.dto.UserToken;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class UserOAuthService {
     private final UserService userService;
     private final JwtProvider jwtProvider;
+    private final RedisTokenService redisTokenService;
 
     @Value("${oauth2.login-url}")
     private String loginUrl;
