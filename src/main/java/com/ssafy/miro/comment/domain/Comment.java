@@ -27,7 +27,18 @@ public class Comment extends BaseEntity {
     @Column(nullable = false, length = 300)
     private String content;
 
+    public Comment(Long id, User user, Article article, String content) {
+        this.id = id;
+        this.user = user;
+        this.article = article;
+        this.content = content;
+    }
+
     public void updateComment(String content) {
         this.content = content;
+    }
+
+    public void deleteComment() {
+        super.updateDeleted();
     }
 }
