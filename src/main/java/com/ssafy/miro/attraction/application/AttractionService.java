@@ -1,9 +1,9 @@
 package com.ssafy.miro.attraction.application;
 
 import com.ssafy.miro.attraction.domain.Attraction;
-import com.ssafy.miro.attraction.domain.exception.AttractionNotFoundException;
 import com.ssafy.miro.attraction.domain.repository.AttractionRespository;
 import com.ssafy.miro.common.code.ErrorCode;
+import com.ssafy.miro.common.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +14,6 @@ public class AttractionService {
 
     public Attraction findAttractionById(Integer attractionId) {
         return attractionRespository.findById(attractionId)
-                .orElseThrow(() -> new AttractionNotFoundException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
     }
 }
