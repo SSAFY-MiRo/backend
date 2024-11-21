@@ -3,15 +3,17 @@ spring:
     name: miro
 
   profiles:
-    active: test
+    include: auth
+    active: dev
 
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: true
 
   config:
-    import: "classpath:/application-secret.yml"
+    import: ["classpath:/application-secret.yml", "classpath:/application-auth.yml"]
 
   data:
     redis:

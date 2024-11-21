@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +31,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String profileImage;
 
+    @Builder
     public User(String authId, String email, String password, String nickname, UserType userType, String profileImage) {
         this.authId = authId;
         this.email = email;
