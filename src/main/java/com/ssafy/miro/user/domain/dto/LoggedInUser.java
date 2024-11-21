@@ -11,6 +11,7 @@ import lombok.ToString;
 @ToString
 public class LoggedInUser {
     private Long id;
+    private String authId;
     private String nickname;
     private String email;
     private UserType userType;
@@ -18,6 +19,7 @@ public class LoggedInUser {
 
     public LoggedInUser(User user) {
         this.id = user.getId();
+        this.authId = user.getAuthId();
         this.nickname = user.getNickname();
         this.email = user.getEmail();
         this.userType = user.getUserType();

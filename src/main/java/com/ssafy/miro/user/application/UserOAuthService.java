@@ -1,11 +1,13 @@
 package com.ssafy.miro.user.application;
 
+import com.ssafy.miro.user.domain.dto.AuthTokenDto;
 import com.ssafy.miro.user.domain.dto.LoggedInUser;
 import com.ssafy.miro.user.domain.User;
 import com.ssafy.miro.user.domain.dto.UserProfileDto;
 import com.ssafy.miro.user.domain.UserType;
 import com.ssafy.miro.user.domain.repository.UserOAuthRepository;
 import com.ssafy.miro.user.domain.repository.UserRepository;
+import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +27,7 @@ import java.util.UUID;
 public class UserOAuthService {
     private final UserRepository userRepository;
     private final UserOAuthRepository userOAuthRepository;
+    private final UserService userService;
 
     @Value("${oauth2.login-url}")
     private String loginUrl;
@@ -44,7 +47,7 @@ public class UserOAuthService {
                 + "&response_type=code&scope=email profile";
     }
 
-    public String getToken(String code) {
+    public AuthTokenDto getToken(String code) {
         WebClient webClient = WebClient
                 .builder()
                 .baseUrl("https://oauth2.googleapis.com")
@@ -57,8 +60,6 @@ public class UserOAuthService {
         requestBody.put("client_secret", clientSecret);
         requestBody.put("redirect_uri", redirectUri);
         requestBody.put("grant_type", "authorization_code");
-
-        log.info("response = {}", requestBody);
         Map<String, Object> response = webClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/token")
@@ -71,10 +72,13 @@ public class UserOAuthService {
                 .block();
 
         if (response == null) return null;
-        return (String) response.get("access_token");
+        return new AuthTokenDto(
+                (String) response.get("access_token"),
+                code
+        );
     }
 
-    public UserProfileDto getUserProfile(String accessToken) {
+    public UserProfileDto getUserProfile(AuthTokenDto tokenDto) {
         WebClient webClient = WebClient
                 .builder()
                 .baseUrl("https://www.googleapis.com")
@@ -83,17 +87,16 @@ public class UserOAuthService {
         Map<String, Object> response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("userinfo/v2/me")
-                        .queryParam("access_token", accessToken)
+                        .queryParam("access_token", tokenDto.accessToken())
                         .build())
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .block();
-
         if (response == null) return null;
         String email = (String) response.get("email");
         String name = (String) response.get("name");
 
-        return new UserProfileDto(email, name);
+        return new UserProfileDto(tokenDto.code(), email, name);
     }
 
     public LoggedInUser registerUser(UserProfileDto userProfile) {
@@ -104,6 +107,7 @@ public class UserOAuthService {
         }
 
         User user = User.builder()
+                .authId(userProfile.getAuthId())
                 .email(userProfile.getEmail())
                 .nickname(userProfile.getNickname())
                 .password(UUID.randomUUID().toString())
@@ -111,8 +115,8 @@ public class UserOAuthService {
                 .profileImage("/oauth-profile")
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        return new LoggedInUser(user);
+        return new LoggedInUser(savedUser);
     }
 }

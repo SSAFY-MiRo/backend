@@ -1,9 +1,12 @@
 package com.ssafy.miro.user.presentation;
 
+import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.jwt.JwtProvider;
 import com.ssafy.miro.user.application.Auth;
 import com.ssafy.miro.user.application.UserOAuthService;
+import com.ssafy.miro.user.application.response.UserTokenResponse;
 import com.ssafy.miro.user.domain.User;
+import com.ssafy.miro.user.domain.dto.AuthTokenDto;
 import com.ssafy.miro.user.domain.dto.LoggedInUser;
 import com.ssafy.miro.user.domain.dto.UserProfileDto;
 import com.ssafy.miro.user.domain.dto.UserToken;
@@ -33,9 +36,10 @@ public class UserOAuthController {
     }
 
     @GetMapping("/login/oauth2/code/google")
-    public ResponseEntity<Object> oauth2Login(String code) {
-        String accessToken = userOAuthService.getToken(code);
-        UserProfileDto userProfile = userOAuthService.getUserProfile(accessToken);
+    public ResponseEntity<ApiResponse<UserTokenResponse>> oauth2Login(String code, HttpServletResponse response) throws IOException {
+        AuthTokenDto tokenDto = userOAuthService.getToken(code);
+        log.info("accessToken = {}", tokenDto);
+        UserProfileDto userProfile = userOAuthService.getUserProfile(tokenDto);
         LoggedInUser loggedInUser = userOAuthService.registerUser(userProfile);
 
 
@@ -44,15 +48,12 @@ public class UserOAuthController {
 
         log.info("userToken = {}", userToken);
 
-
-        return ResponseEntity.ok(new Object());
+        return jwtProvider.sendToken(response, userToken.getAccessToken(), userToken.getRefreshToken());
     }
 
     @GetMapping("parseTest")
-    public void parseTest(@Auth User user) throws IOException {
-        Long id = jwtProvider.getId("eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiaWF0IjoxNzMyMTE3MTEyLCJleHAiOjE3MzI5ODExMTJ9.EM5CPwyazau5LzJJZKrJWjpGVXWbDvucwkKWek09cGA");
+    public void parseTest(@Auth User user) {
         log.info("user = {}", user);
-        log.info("id = {}", id);
     }
 
 }
