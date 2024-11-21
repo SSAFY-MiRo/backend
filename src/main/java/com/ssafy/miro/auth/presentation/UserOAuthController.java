@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class UserOAuthController {
     private final UserOAuthService userOAuthService;

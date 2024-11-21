@@ -2,10 +2,10 @@ package com.ssafy.miro.auth.presentation;
 
 import com.ssafy.miro.auth.application.response.UserTokenResponse;
 import com.ssafy.miro.common.ApiResponse;
-import com.ssafy.miro.common.code.SuccessCode;
-import com.ssafy.miro.common.jwt.BearerAuthorizationExtractor;
+import com.ssafy.miro.common.auth.Auth;
 import com.ssafy.miro.common.jwt.JwtProvider;
 import com.ssafy.miro.common.redis.RedisTokenService;
+import com.ssafy.miro.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +34,11 @@ public class UserTokenController {
         String newAccessToken = jwtProvider.regenerateAccessToken(userId);
 
         return ResponseEntity.ok().body(ApiResponse.onSuccess(new UserTokenResponse(newAccessToken)));
+    }
+
+    @GetMapping("/test")
+    public void testet(@Auth User user) {
+        log.info("user_name = {}, user_email = {}", user.getNickname(), user.getEmail());
     }
 
     @DeleteMapping("/logout")

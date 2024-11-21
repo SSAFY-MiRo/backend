@@ -6,7 +6,6 @@ import com.ssafy.miro.common.jwt.BearerAuthorizationExtractor;
 import com.ssafy.miro.common.jwt.JwtProvider;
 import com.ssafy.miro.user.domain.User;
 import com.ssafy.miro.user.domain.repository.UserRepository;
-import com.ssafy.miro.user.exception.UserNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +47,6 @@ public class OAuthArgumentResolver implements HandlerMethodArgumentResolver {
             String refreshToken = extractRefreshToken(request.getCookies());
             String accessToken = bearerAuthorizationExtractor.extractAccessToken(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
 
-            System.out.println(accessToken + " " + refreshToken);
             jwtProvider.validateTokens(accessToken, refreshToken);
 
             Long id = jwtProvider.getId(accessToken);
