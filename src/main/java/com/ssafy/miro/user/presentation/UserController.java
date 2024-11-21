@@ -28,7 +28,6 @@ import static com.ssafy.miro.common.code.SuccessCode.*;
 @RequestMapping("api/v1/user")
 public class UserController {
     private final UserService userService;
-    private final ImageService imageService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<Object>> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {
@@ -43,19 +42,20 @@ public class UserController {
     }
 
     @PostMapping("/verify-password")
-    public ResponseEntity<ApiResponse<Object>> checkPassword(@RequestBody @Valid UserCheckPwdRequest userCheckPwdRequest) {
-        userService.validatePassword("asdf", userCheckPwdRequest.password());
+    public ResponseEntity<ApiResponse<Object>> checkPassword(@Auth User user, @RequestBody @Valid UserCheckPwdRequest userCheckPwdRequest) {
+        userService.validatePassword(user, userCheckPwdRequest.password());
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Object>> getUserInfo() {
-        UserInfo userInfo = userService.getUserInfo(1L);
+    public ResponseEntity<ApiResponse<Object>> getUserInfo(@Auth User user) {
+        System.out.println(user);
+        UserInfo userInfo = userService.getUserInfo(user);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(userInfo));
     }
 
     @PutMapping(consumes = "multipart/form-data")
-    public ResponseEntity<ApiResponse<Object>> uploadImage(@Auth User user, @RequestParam("file") MultipartFile file, @ModelAttribute @Valid UserUpdateRequest userUpdateRequest) throws IOException {
+    public ResponseEntity<ApiResponse<Object>> updateUser(@Auth User user, @RequestParam("file") MultipartFile file, @ModelAttribute @Valid UserUpdateRequest userUpdateRequest) throws IOException {
         userService.updateUser(user, file, userUpdateRequest);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }

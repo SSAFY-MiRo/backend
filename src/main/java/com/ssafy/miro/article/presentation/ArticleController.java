@@ -8,6 +8,8 @@ import com.ssafy.miro.article.domain.ArticleSearchType;
 import com.ssafy.miro.article.presentation.request.ArticleCreateRequest;
 import com.ssafy.miro.article.presentation.request.ArticleUpdateRequest;
 import com.ssafy.miro.common.ApiResponse;
+import com.ssafy.miro.common.auth.Auth;
+import com.ssafy.miro.user.domain.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 import static com.ssafy.miro.common.code.SuccessCode.*;
 
@@ -30,9 +31,9 @@ import static com.ssafy.miro.common.code.SuccessCode.*;
 public class ArticleController {
     private final ArticleService articleService;
     @PostMapping
-    public ResponseEntity<ApiResponse<Object>> createBoard(@Valid @RequestBody ArticleCreateRequest articleCreateRequest) {
-        Long newBoardId = articleService.save(articleCreateRequest);
-        return ResponseEntity.created( URI.create("/article/"+newBoardId)).body(ApiResponse.of(CREATE_BOARD, null));
+    public ResponseEntity<ApiResponse<Object>> createBoard(@Auth User user, @Valid @RequestBody ArticleCreateRequest articleCreateRequest) {
+        Long id = articleService.save(user, articleCreateRequest);
+        return ResponseEntity.created( URI.create("/article/"+id)).body(ApiResponse.of(CREATE_BOARD, id));
     }
 
     @GetMapping
@@ -44,20 +45,26 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ArticleItem>> getBoardById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoard(id)));
+    public ResponseEntity<ApiResponse<ArticleItem>> getBoardById(@Auth User user, @PathVariable Long id) {
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoard(user, id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> updateBoard(@PathVariable Long id, @RequestBody ArticleUpdateRequest articleUpdateRequest) {
-        articleService.updateBoard(id, articleUpdateRequest);
+    public ResponseEntity<ApiResponse<Object>> updateBoard(@Auth User user, @PathVariable Long id, @RequestBody ArticleUpdateRequest articleUpdateRequest) {
+        articleService.updateBoard(user, id, articleUpdateRequest);
         return ResponseEntity.ok().body(ApiResponse.of(UPDATE_BOARD, null));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> deleteBoard(@PathVariable Long id) {
-        articleService.deleteBoard(id);
+    public ResponseEntity<ApiResponse<Object>> deleteBoard(@Auth User user, @PathVariable Long id) {
+        articleService.deleteBoard(user, id);
         return ResponseEntity.ok().body(ApiResponse.of(DELETE_BOARD, null));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<Object>> updateLike(@Auth User user, @PathVariable Long id) {
+        articleService.updateLike(user, id);
+        return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
 
 }

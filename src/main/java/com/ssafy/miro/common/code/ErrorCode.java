@@ -32,13 +32,17 @@ public enum ErrorCode {
     NON_VALIDATED_PASSWORD(3006, UNAUTHORIZED, "비밀번호가 유효하지 않습니다."),
 
     //Attraction
-    NOT_FOUND_ATTRACTION_ID(3101, NOT_FOUND, "요청한 ID에 해당하는 관광지가 존재하지 않습니다."),
+    NOT_FOUND_ATTRACTION_ID(3100, NOT_FOUND, "요청한 ID에 해당하는 관광지가 존재하지 않습니다."),
 
     //Plan
-    NOT_FOUND_PLAN_ID(3201, NOT_FOUND, "요청한 ID에 해당하는 여행 계획이 존재하지 않습니다."),
+    NOT_FOUND_PLAN_ID(3200, NOT_FOUND, "요청한 ID에 해당하는 여행 계획이 존재하지 않습니다."),
+    NOT_OWNER_PLAN(3201, UNAUTHORIZED, "요청한 여행계획의 주인이 아닙니다."),
 
     //Email
-    NOT_FOUND_EMAIL_TOKEN_ID(3201, NOT_FOUND, "이메일 검증에 실패했습니다."),
+    NOT_FOUND_EMAIL_TOKEN_ID(3300, NOT_FOUND, "이메일 검증에 실패했습니다."),
+
+    //Article
+    NOT_OWNER_ARTICLE(3401, UNAUTHORIZED, "요청한 게시물의 주인이 아닙니다."),
 
     SERVER_ERROR(4000, INTERNAL_SERVER_ERROR, "서버 에러가 발생하였습니다.");
 
