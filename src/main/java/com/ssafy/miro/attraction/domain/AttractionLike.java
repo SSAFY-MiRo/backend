@@ -18,4 +18,9 @@ public class AttractionLike {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public AttractionLike(Attraction attraction, User user) {
+        this.attraction = attraction;
+        this.user = user;
+    }
 }
