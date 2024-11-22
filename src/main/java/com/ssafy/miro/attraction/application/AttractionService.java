@@ -1,13 +1,19 @@
 package com.ssafy.miro.attraction.application;
 
 import com.ssafy.miro.attraction.application.response.AttractionDetailItem;
+import com.ssafy.miro.attraction.application.response.AttractionGunguItem;
 import com.ssafy.miro.attraction.application.response.AttractionLikeItem;
 import com.ssafy.miro.attraction.application.response.AttractionListItem;
 import com.ssafy.miro.attraction.domain.Attraction;
 import com.ssafy.miro.attraction.domain.AttractionLike;
+import com.ssafy.miro.attraction.domain.Gugun;
+import com.ssafy.miro.attraction.domain.Sido;
 import com.ssafy.miro.attraction.domain.dto.AttractionSearchFilter;
+import com.ssafy.miro.attraction.domain.item.GugunItem;
 import com.ssafy.miro.attraction.domain.repository.AttractionLikeRepository;
 import com.ssafy.miro.attraction.domain.repository.AttractionRepository;
+import com.ssafy.miro.attraction.domain.repository.GugunRespository;
+import com.ssafy.miro.attraction.domain.repository.SidoRespository;
 import com.ssafy.miro.common.code.ErrorCode;
 import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.user.domain.User;
@@ -16,11 +22,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
+import static com.ssafy.miro.common.code.ErrorCode.*;
+
 @RequiredArgsConstructor
 @Service
 public class AttractionService {
     private final AttractionRepository attractionRepository;
     private final AttractionLikeRepository attractionLikeRepository;
+    private final GugunRespository gugunRespository;
 
     public Page<AttractionListItem> selectAllAttractions(Pageable pageable, AttractionSearchFilter filter) {
         Page<AttractionListItem> result;
@@ -74,6 +86,12 @@ public class AttractionService {
         return attractionRepository.findById(no).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
     }
 
+    public List<GugunItem> getAttractionGungus(Integer sidoCode) {
+        List<Gugun> allBySidoCode = gugunRespository.findAllBySidoCode(sidoCode);
+        return allBySidoCode.stream().map(GugunItem::of).toList();
+
+    }
+
     private AttractionLikeItem getAttractionLikeInfo(User user, Integer attractionNo) {
         boolean attractionLike = false;
         if (user != null) attractionLike = attractionLikeRepository.existsByUserIdAndAttractionNo(user.getId(), attractionNo);
@@ -81,4 +99,6 @@ public class AttractionService {
                 attractionLikeRepository.countByAttractionNo(attractionNo),
                 attractionLike);
     }
+
+
 }

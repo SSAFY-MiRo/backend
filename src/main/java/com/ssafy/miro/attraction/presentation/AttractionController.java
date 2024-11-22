@@ -1,13 +1,17 @@
 package com.ssafy.miro.attraction.presentation;
 
+import com.ssafy.miro.article.application.response.ArticleItem;
 import com.ssafy.miro.attraction.application.AttractionService;
 import com.ssafy.miro.attraction.application.response.AttractionDetailItem;
 import com.ssafy.miro.attraction.application.response.AttractionListItem;
 import com.ssafy.miro.attraction.application.response.AttractionLikeItem;
 import com.ssafy.miro.attraction.domain.Attraction;
+import com.ssafy.miro.attraction.domain.Gugun;
 import com.ssafy.miro.attraction.domain.dto.AttractionSearchFilter;
+import com.ssafy.miro.attraction.domain.item.GugunItem;
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.auth.Auth;
+import com.ssafy.miro.common.auth.NonEssential;
 import com.ssafy.miro.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,5 +53,10 @@ public class AttractionController {
     @PatchMapping("/like/{no}")
     public ResponseEntity<ApiResponse<AttractionLikeItem>> setLikeAttraction(@Auth User user, @PathVariable("no") Integer no) {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.likeHandler(user, no)));
+    }
+
+    @GetMapping("/gungu")
+    public ResponseEntity<ApiResponse<List<GugunItem>>> getGunGus(@RequestParam Integer sidoCode) {
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.getAttractionGungus(sidoCode)));
     }
 }
