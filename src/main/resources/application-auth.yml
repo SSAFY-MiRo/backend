@@ -1,7 +1,7 @@
 oauth2:
   client-id: 991882204649-m7pm4n974qb2ccro0m7ifh96mcnt3h13.apps.googleusercontent.com
   client-secret: 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
-  redirect-uri: http://localhost:5173/
+  redirect-uri: http://localhost:5173/auth
   token-uri: https://oauth2.googleapis.com/token
   user-info-uri: https://www.googleapis.com/userinfo/v2/me
 

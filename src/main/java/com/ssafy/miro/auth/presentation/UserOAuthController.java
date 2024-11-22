@@ -23,11 +23,6 @@ import java.io.IOException;
 public class UserOAuthController {
     private final UserOAuthService userOAuthService;
     private final JwtProvider jwtProvider;
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<ApiResponse<String>> login() {
-//        return ResponseEntity.ok().body(ApiResponse.of(SuccessCode.OK, userOAuthService.getUrl()));
-//    }
 
     @PostMapping("/login/oauth2/code/google")
     public ResponseEntity<ApiResponse<UserTokenResponse>> oauth2Login(@RequestBody TokenCodeRequest tokenCodeRequest, HttpServletResponse response) {

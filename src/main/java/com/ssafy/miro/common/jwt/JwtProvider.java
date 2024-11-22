@@ -93,7 +93,6 @@ public class JwtProvider {
     }
 
     private String createToken(Long id) {
-        System.out.println(secretKey);
         return Jwts.builder()
                 .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
