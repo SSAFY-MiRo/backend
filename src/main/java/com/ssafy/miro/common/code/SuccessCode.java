@@ -27,6 +27,8 @@ public enum SuccessCode {
 
     //User
     CREATE_USER(2100, HttpStatus.CREATED, "사용자 등록 성공했습니다."),
+    AUTH_SUCCESS(2100, HttpStatus.CREATED, "사용자 인증 성공했습니다."),
+    TOKEN_REFRESHED(2001, HttpStatus.CREATED, "토큰 재발급 성공했습니다.")
     ;
 
     private final int code;
