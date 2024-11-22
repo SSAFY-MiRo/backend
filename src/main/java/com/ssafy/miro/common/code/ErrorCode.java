@@ -16,6 +16,8 @@ public enum ErrorCode {
 
     INVALID_AUTHORITY(2001, FORBIDDEN, "해당 리소스에 접근할 권한이 없습니다."),
     INVALID_PASSWORD(2002, UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
+    INVALID_JWT_FORMAT(2003, BAD_REQUEST, "JWT 형식이 아닙니다."),
+    JWT_NOT_FOUND(2011, NOT_FOUND, "토큰이 전달되지 않았습니다."),
     INVALID_ACCESS_TOKEN(2003, UNAUTHORIZED, "유효하지 않은 AccessToken 입니다."),
     INVALID_REFRESH_TOKEN(2004, UNAUTHORIZED, "유효하지 않은 RefreshToken 입니다."),
     INVALID_AUTHORIZATION_CODE(2005, UNAUTHORIZED, "유효하지 않은 인가 코드 입니다."),

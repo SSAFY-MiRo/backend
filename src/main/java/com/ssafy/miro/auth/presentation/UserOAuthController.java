@@ -2,11 +2,10 @@ package com.ssafy.miro.auth.presentation;
 
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.jwt.JwtProvider;
-import com.ssafy.miro.common.auth.Auth;
 import com.ssafy.miro.auth.application.UserOAuthService;
 import com.ssafy.miro.auth.application.response.UserTokenResponse;
-import com.ssafy.miro.user.domain.User;
 import com.ssafy.miro.auth.domain.dto.UserToken;
+import com.ssafy.miro.common.redis.RedisTokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,7 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class UserOAuthController {
     private final UserOAuthService userOAuthService;
@@ -35,7 +34,6 @@ public class UserOAuthController {
         UserToken userToken = userOAuthService.authenticateUser(code);
         return jwtProvider.sendToken(
                 response,
-                userToken.getId(),
                 userToken.getAccessToken(),
                 userToken.getRefreshToken());
     }

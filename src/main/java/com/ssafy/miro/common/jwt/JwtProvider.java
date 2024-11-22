@@ -1,21 +1,19 @@
 package com.ssafy.miro.common.jwt;
 
 
-import com.ssafy.miro.auth.exception.InvalidJwtException;
+
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.code.SuccessCode;
 import com.ssafy.miro.auth.application.response.UserTokenResponse;
 import com.ssafy.miro.auth.domain.dto.UserToken;
+import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.common.redis.RedisTokenService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +27,14 @@ import static com.ssafy.miro.common.code.ErrorCode.*;
 
 @Slf4j
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class JwtProvider {
     @Value("${jwt.secret}")
     private String key;
+    @Value("${jwt.expired-time}")
+    private long expiredTime;
     private SecretKey secretKey;
+    private final RedisTokenService redisTokenService;
 
     @PostConstruct
     public void init() {
@@ -43,6 +44,7 @@ public class JwtProvider {
     public UserToken generateAuthToken(Long id) {
         String accessToken = createToken(id);
         String refreshToken = createToken(id);
+        redisTokenService.saveToken(refreshToken, String.valueOf(id), 3600);
         return new UserToken(id, accessToken, refreshToken);
     }
 
@@ -58,21 +60,30 @@ public class JwtProvider {
     private void validateRefreshToken(String refreshToken) {
         try {
             parseToken(refreshToken);
-        } catch (Exception e) {
-            throw new InvalidJwtException(INVALID_REFRESH_TOKEN);
+            String userId = redisTokenService.getToken(refreshToken);
+            if (userId == null) throw new GlobalException(INVALID_REFRESH_TOKEN);
+        } catch (JwtException e) {
+            throw new GlobalException(INVALID_REFRESH_TOKEN);
         }
+
     }
 
     private void validateAccessToken(String token) {
         try {
             parseToken(token);
-        } catch (Exception e) {
-            throw new InvalidJwtException(INVALID_ACCESS_TOKEN);
+        } catch (JwtException e) {
+            throw new GlobalException(INVALID_ACCESS_TOKEN);
         }
     }
 
     private Jws<Claims> parseToken(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+        } catch (UnsupportedJwtException e) {
+            throw new GlobalException(INVALID_JWT_FORMAT);
+        }  catch (IllegalArgumentException e) {
+            throw new GlobalException(JWT_NOT_FOUND);
+        }
     }
 
     public String regenerateAccessToken(Long id) {
@@ -84,17 +95,17 @@ public class JwtProvider {
         return Jwts.builder()
                 .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 864000000))
+                .expiration(new Date(System.currentTimeMillis() + expiredTime))
                 .signWith(secretKey).compact();
     }
 
-    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, Long userId, String accessToken, String refreshToken) {
+    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, String accessToken, String refreshToken) {
         Cookie cookie = new Cookie("refresh-token", refreshToken);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(ApiResponse.of(SuccessCode.CREATE_PLAN, new UserTokenResponse(accessToken, userId)));
+        return ResponseEntity.ok(ApiResponse.of(SuccessCode.AUTH_SUCCESS, new UserTokenResponse(accessToken)));
     }
 }
