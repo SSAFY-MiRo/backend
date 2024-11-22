@@ -8,9 +8,7 @@ import com.ssafy.miro.auth.application.response.UserTokenResponse;
 import com.ssafy.miro.auth.domain.dto.UserToken;
 import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.common.redis.RedisTokenService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
@@ -33,6 +31,8 @@ import static com.ssafy.miro.common.code.ErrorCode.*;
 public class JwtProvider {
     @Value("${jwt.secret}")
     private String key;
+    @Value("${jwt.expired-time}")
+    private long expiredTime;
     private SecretKey secretKey;
     private final RedisTokenService redisTokenService;
 
@@ -44,7 +44,6 @@ public class JwtProvider {
     public UserToken generateAuthToken(Long id) {
         String accessToken = createToken(id);
         String refreshToken = createToken(id);
-
         redisTokenService.saveToken(refreshToken, String.valueOf(id), 3600);
         return new UserToken(id, accessToken, refreshToken);
     }
@@ -61,24 +60,30 @@ public class JwtProvider {
     private void validateRefreshToken(String refreshToken) {
         try {
             parseToken(refreshToken);
-
             String userId = redisTokenService.getToken(refreshToken);
             if (userId == null) throw new GlobalException(INVALID_REFRESH_TOKEN);
-        } catch (Exception e) {
+        } catch (JwtException e) {
             throw new GlobalException(INVALID_REFRESH_TOKEN);
         }
+
     }
 
     private void validateAccessToken(String token) {
         try {
             parseToken(token);
-        } catch (Exception e) {
+        } catch (JwtException e) {
             throw new GlobalException(INVALID_ACCESS_TOKEN);
         }
     }
 
     private Jws<Claims> parseToken(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+        } catch (UnsupportedJwtException e) {
+            throw new GlobalException(INVALID_JWT_FORMAT);
+        }  catch (IllegalArgumentException e) {
+            throw new GlobalException(JWT_NOT_FOUND);
+        }
     }
 
     public String regenerateAccessToken(Long id) {
@@ -90,7 +95,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 864000000))
+                .expiration(new Date(System.currentTimeMillis() + expiredTime))
                 .signWith(secretKey).compact();
     }
 

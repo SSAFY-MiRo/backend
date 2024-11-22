@@ -8,3 +8,4 @@ oauth2:
 
 jwt:
   secret: 4dovQZNFIk94YJfgIfD9ercBD_9DyGNAmQ4keHYImm8
+  expired-time: 864000000

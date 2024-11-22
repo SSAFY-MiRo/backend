@@ -23,7 +23,6 @@ import java.io.IOException;
 public class UserOAuthController {
     private final UserOAuthService userOAuthService;
     private final JwtProvider jwtProvider;
-    private final RedisTokenService redisTokenService;
 
     @GetMapping("/login")
     public void login(HttpServletResponse response) throws IOException {
