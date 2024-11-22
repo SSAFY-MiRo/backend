@@ -9,11 +9,13 @@ import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-public class OAuthArgumentResolverConfig implements WebMvcConfigurer {
-    private final OAuthArgumentResolver oAuthArgumentResolver;
+public class AuthResolverConfig implements WebMvcConfigurer {
+    private final AuthArgumentResolver authArgumentResolver;
+    private final NotEssentialArgumentResolver notEssentialArgumentResolver;
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(oAuthArgumentResolver);
+        resolvers.add(authArgumentResolver);
+        resolvers.add(notEssentialArgumentResolver);
     }
 }

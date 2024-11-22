@@ -9,6 +9,7 @@ import com.ssafy.miro.article.presentation.request.ArticleCreateRequest;
 import com.ssafy.miro.article.presentation.request.ArticleUpdateRequest;
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.auth.Auth;
+import com.ssafy.miro.common.auth.NonEssential;
 import com.ssafy.miro.user.domain.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +42,11 @@ public class ArticleController {
                                                                      @RequestParam(name = "search", required = false) String search,
                                                                      @RequestParam(name = "search-type", required = false) ArticleSearchType searchType,
                                                                      @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        
         return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoards(articleCategory, search, searchType, pageable)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ArticleItem>> getBoardById(@Auth User user, @PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ArticleItem>> getBoardById(@NonEssential User user, @PathVariable Long id) {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoard(user, id)));
     }
 
