@@ -9,6 +9,7 @@ import com.ssafy.miro.article.presentation.request.ArticleCreateRequest;
 import com.ssafy.miro.article.presentation.request.ArticleUpdateRequest;
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.auth.Auth;
+import com.ssafy.miro.common.auth.NonEssential;
 import com.ssafy.miro.user.domain.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,9 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ArticleItem>> getBoardById(@Auth User user, @PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ArticleItem>> getBoardById(@NonEssential User user, @PathVariable Long id) {
+        System.out.println("1231312312312222222222222222222222222222222222222222");
+        log.info("user = {}", user);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoard(user, id)));
     }
 

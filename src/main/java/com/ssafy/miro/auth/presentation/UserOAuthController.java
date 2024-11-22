@@ -5,7 +5,6 @@ import com.ssafy.miro.common.jwt.JwtProvider;
 import com.ssafy.miro.auth.application.UserOAuthService;
 import com.ssafy.miro.auth.application.response.UserTokenResponse;
 import com.ssafy.miro.auth.domain.dto.UserToken;
-import com.ssafy.miro.common.redis.RedisTokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
