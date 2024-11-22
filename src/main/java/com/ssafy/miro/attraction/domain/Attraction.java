@@ -48,4 +48,7 @@ public class Attraction {
     private String homepage;
     private String overview;
 
+    public void increaseViewCount() {
+        this.view++;
+    }
 }
