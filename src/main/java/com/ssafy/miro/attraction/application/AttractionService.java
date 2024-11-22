@@ -9,6 +9,7 @@ import com.ssafy.miro.attraction.domain.AttractionLike;
 import com.ssafy.miro.attraction.domain.Gugun;
 import com.ssafy.miro.attraction.domain.Sido;
 import com.ssafy.miro.attraction.domain.dto.AttractionSearchFilter;
+import com.ssafy.miro.attraction.domain.item.AttractionItem;
 import com.ssafy.miro.attraction.domain.item.GugunItem;
 import com.ssafy.miro.attraction.domain.repository.AttractionLikeRepository;
 import com.ssafy.miro.attraction.domain.repository.AttractionRepository;

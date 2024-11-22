@@ -59,4 +59,9 @@ public class AttractionController {
     public ResponseEntity<ApiResponse<List<GugunItem>>> getGunGus(@RequestParam Integer sidoCode) {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.getAttractionGungus(sidoCode)));
     }
+
+//    @GetMapping("/popular")
+//    public ResponseEntity<ApiResponse<List<GugunItem>>> getPopularAttractions() {
+//        return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.getAttractionGungus(sidoCode)));
+//    }
 }
