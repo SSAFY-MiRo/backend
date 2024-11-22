@@ -31,6 +31,6 @@ public class ImageService {
         // 파일 저장
         file.transferTo(filePath.toFile());
 
-        return filePath.toString();
+        return fileName;
     }
 }
