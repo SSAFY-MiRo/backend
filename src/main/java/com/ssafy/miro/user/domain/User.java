@@ -33,9 +33,9 @@ public class User extends BaseEntity {
     private String profileImage;
     @ColumnDefault("false")
     @Column(name = "is_oauth_authenticated")
-    private boolean isOAuth;
+    private Boolean isOAuth = false;
 
-    public User(String email, String password, String nickname, UserType userType, String profileImage, boolean isOAuth) {
+    public User(String email, String password, String nickname, UserType userType, String profileImage, Boolean isOAuth) {
         this.email = email;
         this.password = encryptPassword(password);
         this.nickname = nickname;
