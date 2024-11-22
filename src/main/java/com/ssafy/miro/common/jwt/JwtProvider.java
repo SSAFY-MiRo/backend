@@ -1,10 +1,12 @@
 package com.ssafy.miro.common.jwt;
 
 
+import com.ssafy.miro.auth.exception.InvalidJwtException;
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.code.SuccessCode;
 import com.ssafy.miro.auth.application.response.UserTokenResponse;
 import com.ssafy.miro.auth.domain.dto.UserToken;
+import com.ssafy.miro.common.redis.RedisTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -23,6 +25,8 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+import static com.ssafy.miro.common.code.ErrorCode.*;
+
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -33,15 +37,13 @@ public class JwtProvider {
 
     @PostConstruct
     public void init() {
-        log.info("JWT provider initialized");
-        log.info("JWT key: {}", key);
         this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
     public UserToken generateAuthToken(Long id) {
         String accessToken = createToken(id);
         String refreshToken = createToken(id);
-        return new UserToken(accessToken, refreshToken);
+        return new UserToken(id, accessToken, refreshToken);
     }
 
     public void validateTokens(String accessToken, String refreshToken) {
@@ -57,7 +59,7 @@ public class JwtProvider {
         try {
             parseToken(refreshToken);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new InvalidJwtException(INVALID_REFRESH_TOKEN);
         }
     }
 
@@ -65,7 +67,7 @@ public class JwtProvider {
         try {
             parseToken(token);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new InvalidJwtException(INVALID_ACCESS_TOKEN);
         }
     }
 
@@ -84,16 +86,15 @@ public class JwtProvider {
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
                 .signWith(secretKey).compact();
-
     }
 
-    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, String accessToken, String refreshToken) {
+    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, Long userId, String accessToken, String refreshToken) {
         Cookie cookie = new Cookie("refresh-token", refreshToken);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(ApiResponse.of(SuccessCode.CREATE_PLAN, new UserTokenResponse("Bearer " + accessToken)));
+        return ResponseEntity.ok(ApiResponse.of(SuccessCode.CREATE_PLAN, new UserTokenResponse(accessToken, userId)));
     }
 }

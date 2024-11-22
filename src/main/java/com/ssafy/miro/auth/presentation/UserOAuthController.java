@@ -31,16 +31,13 @@ public class UserOAuthController {
     }
 
     @GetMapping("/login/oauth2/code/google")
-    public ResponseEntity<ApiResponse<UserTokenResponse>> oauth2Login(String code, HttpServletResponse response) throws IOException {
-        String accessToken = userOAuthService.getToken(code);
-        log.info("accessToken = {}", accessToken);
-        UserToken userToken = userOAuthService.getUserToken(accessToken);
-        return jwtProvider.sendToken(response, userToken.getAccessToken(), userToken.getRefreshToken());
-    }
-
-    @GetMapping("parseTest")
-    public void parseTest(@Auth User user) {
-        log.info("user = {}", user);
+    public ResponseEntity<ApiResponse<UserTokenResponse>> oauth2Login(String code, HttpServletResponse response) {
+        UserToken userToken = userOAuthService.authenticateUser(code);
+        return jwtProvider.sendToken(
+                response,
+                userToken.getId(),
+                userToken.getAccessToken(),
+                userToken.getRefreshToken());
     }
 
 }
