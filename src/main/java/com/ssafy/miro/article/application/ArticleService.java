@@ -48,11 +48,8 @@ public class ArticleService {
 
     public ArticleItem getBoard(User user, Long id) {
         Article article = articleRepository.findById(id).orElseThrow(() -> new GlobalException(NOT_FOUND_BOARD_ID));
-        if(!article.getUser().equals(user)){
-            throw new GlobalException(NOT_FOUND_BOARD_ID);
-        }
         Long likeCount=articleLikeRepository.countByArticle(article);
-        boolean isLike = articleLikeRepository.findByArticleAndUser(article, user).isPresent();
+        boolean isLike = user != null && articleLikeRepository.findByArticleAndUser(article, user).isPresent();
         //사용자 like 했는지 안했는지 해줘야 함
         return ArticleItem.of(article,likeCount,isLike);
     }

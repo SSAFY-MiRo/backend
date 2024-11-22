@@ -1,6 +1,6 @@
 package com.ssafy.miro.common.jwt;
 
-import com.ssafy.miro.auth.exception.InvalidJwtException;
+import com.ssafy.miro.common.exception.GlobalException;
 import org.springframework.stereotype.Component;
 
 import static com.ssafy.miro.common.code.ErrorCode.INVALID_ACCESS_TOKEN;
@@ -13,6 +13,6 @@ public class BearerAuthorizationExtractor {
         if (header != null && header.startsWith(BEARER_TYPE)) {
             return header.substring(BEARER_TYPE.length()).trim();
         }
-        throw new InvalidJwtException(INVALID_ACCESS_TOKEN);
+        throw new GlobalException(INVALID_ACCESS_TOKEN);
     }
 }

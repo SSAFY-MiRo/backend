@@ -1,4 +1,4 @@
 package com.ssafy.miro.auth.application.response;
 
-public record UserTokenResponse(String accessToken, Long userId) {
+public record UserTokenResponse(String accessToken) {
 }

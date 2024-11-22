@@ -70,7 +70,6 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(()->new GlobalException(NOT_FOUND_USER_ID));
     }
 
-
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }

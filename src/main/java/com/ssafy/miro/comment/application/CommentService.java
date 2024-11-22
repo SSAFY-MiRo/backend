@@ -31,7 +31,7 @@ public class CommentService {
     }
 
     public Comment insertComment(User user, CommentAddRequest comment) {
-        Article article = articleRepository.findById(comment.getArticleId()).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BOARD_ID));
+        Article article = articleRepository.findById(comment.getArticleId()).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BOARD_ID)   );
         return commentRepository.save(comment.toComment(user, article, comment.getContent()));
     }
 

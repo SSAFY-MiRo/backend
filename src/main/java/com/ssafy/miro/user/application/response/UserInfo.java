@@ -10,6 +10,6 @@ public record UserInfo(
     String imageUrl
 ) {
     public static UserInfo of(User user){
-        return new UserInfo(user.isOAuth(), user.getId(), user.getNickname(), user.getProfileImage());
+        return new UserInfo(user.getIsOAuth(), user.getId(), user.getNickname(), user.getProfileImage());
     }
 }
