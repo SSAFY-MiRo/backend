@@ -1,6 +1,8 @@
 package com.ssafy.miro.auth.presentation;
 
+import com.ssafy.miro.auth.presentation.request.TokenCodeRequest;
 import com.ssafy.miro.common.ApiResponse;
+import com.ssafy.miro.common.code.SuccessCode;
 import com.ssafy.miro.common.jwt.JwtProvider;
 import com.ssafy.miro.auth.application.UserOAuthService;
 import com.ssafy.miro.auth.application.response.UserTokenResponse;
@@ -10,9 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -23,15 +23,15 @@ import java.io.IOException;
 public class UserOAuthController {
     private final UserOAuthService userOAuthService;
     private final JwtProvider jwtProvider;
+//
+//    @PostMapping("/login")
+//    public ResponseEntity<ApiResponse<String>> login() {
+//        return ResponseEntity.ok().body(ApiResponse.of(SuccessCode.OK, userOAuthService.getUrl()));
+//    }
 
-    @GetMapping("/login")
-    public void login(HttpServletResponse response) throws IOException {
-        response.sendRedirect(userOAuthService.getUrl());
-    }
-
-    @GetMapping("/login/oauth2/code/google")
-    public ResponseEntity<ApiResponse<UserTokenResponse>> oauth2Login(String code, HttpServletResponse response) {
-        UserToken userToken = userOAuthService.authenticateUser(code);
+    @PostMapping("/login/oauth2/code/google")
+    public ResponseEntity<ApiResponse<UserTokenResponse>> oauth2Login(@RequestBody TokenCodeRequest tokenCodeRequest, HttpServletResponse response) {
+        UserToken userToken = userOAuthService.authenticateUser(tokenCodeRequest.code());
         return jwtProvider.sendToken(
                 response,
                 userToken.getAccessToken(),

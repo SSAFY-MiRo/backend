@@ -26,7 +26,7 @@ public class Attraction {
     @JoinColumn(name = "area_code")
     private Sido sido;
     @ColumnDefault("0")
-    private Long view=0L;
+    private Long view = 0L;
     @Column(name = "si_gun_gu_code")
     private Integer guGunCode;
     @Column(length = 100)
