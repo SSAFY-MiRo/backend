@@ -36,32 +36,7 @@ public class AttractionService {
     private final GugunRespository gugunRespository;
 
     public Page<AttractionListItem> selectAllAttractions(Pageable pageable, AttractionSearchFilter filter) {
-        Page<AttractionListItem> result;
-
-        if (filter.sido() == null) throw new GlobalException(ErrorCode.INVALID_REQUEST);
-        else if (filter.guguns() == null &&
-                filter.attractionType() == null &&
-                filter.keyword() == null) {
-            result = attractionRepository.findAllBySidoCode(filter.sido(), pageable).map(AttractionListItem::of);
-        } else if (filter.guguns() == null && filter.attractionType() == null) {
-            result = attractionRepository.findAllBySidoCodeAndTitleContaining(filter.sido(), filter.keyword(), pageable).map(AttractionListItem::of);
-        } else if (filter.guguns() == null && filter.keyword() == null) {
-            result = attractionRepository.findAllBySidoCodeAndContentTypeIdIn(filter.sido(), filter.attractionType(), pageable).map(AttractionListItem::of);
-        } else if (filter.keyword() == null && filter.attractionType() == null) {
-            result = attractionRepository.findAllBySidoCodeAndGuGunCodeIn(filter.sido(), filter.guguns(), pageable).map(AttractionListItem::of);
-        } else if (filter.guguns() == null) {
-            result = attractionRepository.findAllBySidoCodeAndContentTypeIdInAndTitleContaining(filter.sido(), filter.attractionType(), filter.keyword(), pageable).map(AttractionListItem::of);
-        } else if (filter.keyword() == null) {
-            result = attractionRepository.findAllBySidoCodeAndGuGunCodeInAndContentTypeIdIn(filter.sido(), filter.guguns(), filter.attractionType(), pageable).map(AttractionListItem::of);
-        } else if (filter.attractionType() == null) {
-            result = attractionRepository.findAllBySidoCodeAndGuGunCodeInAndTitleContaining(filter.sido(), filter.guguns(), filter.keyword(), pageable).map(AttractionListItem::of);
-        } else {
-            result = attractionRepository.findAllBySidoCodeAndGuGunCodeInAndContentTypeIdInAndTitleContaining(
-                    filter.sido(), filter.guguns(), filter.attractionType(), filter.keyword(), pageable
-            ).map(AttractionListItem::of);
-        }
-
-        return result;
+        return attractionRepository.findAttractions(filter, pageable);
     }
 
     public AttractionLikeItem likeHandler(User user, Integer attractionNo) {
