@@ -2,6 +2,7 @@ package com.ssafy.miro.article.application;
 
 import com.ssafy.miro.article.application.response.ArticleItem;
 import com.ssafy.miro.article.application.response.ArticleItems;
+import com.ssafy.miro.article.application.response.ArticleLikeItem;
 import com.ssafy.miro.article.domain.Article;
 import com.ssafy.miro.article.domain.ArticleCategory;
 import com.ssafy.miro.article.domain.ArticleLike;
@@ -40,11 +41,11 @@ public class ArticleService {
 
     public ArticleItem getBoard(User user, Long id) {
         Article article = articleRepository.findById(id).orElseThrow(() -> new GlobalException(NOT_FOUND_BOARD_ID));
-        Long likeCount=articleLikeRepository.countByArticle(article);
-        boolean isLike = user != null && articleLikeRepository.findByArticleAndUser(article, user).isPresent();
+        ArticleLikeItem articleLikeAndLiked = getArticleLikeAndLiked(article, user);
         //사용자 like 했는지 안했는지 해줘야 함
-        return ArticleItem.of(article,likeCount,isLike);
+        return ArticleItem.of(article,articleLikeAndLiked.likeCount(),articleLikeAndLiked.liked());
     }
+
 
     @Transactional
     public void updateBoard(User user, Long id, ArticleUpdateRequest articleUpdateRequest) {
@@ -68,11 +69,27 @@ public class ArticleService {
         return article;
     }
 
-    public void updateLike(User user, Long id) {
+    @Transactional
+    public ArticleLikeItem updateLike(User user, Long id) {
         Article article = findById(id);
         articleLikeRepository.findByArticleAndUser(article, user).ifPresentOrElse(
                 articleLikeRepository::delete,
                 ()->articleLikeRepository.save(new ArticleLike(user, article))
         );
+        return getArticleLikeAndLiked(article, user);
+    }
+
+    private ArticleLikeItem getArticleLikeAndLiked(Article article, User user) {
+        Long likeCount=getArticleLike(article);
+        boolean isLike = isLikeByUser(article,user);
+        return new ArticleLikeItem(likeCount,isLike);
+    }
+
+    private Long getArticleLike(Article article) {
+        return articleLikeRepository.countByArticle(article);
+    }
+
+    private boolean isLikeByUser(Article article, User user) {
+        return user != null && articleLikeRepository.findByArticleAndUser(article, user).isPresent();
     }
 }
