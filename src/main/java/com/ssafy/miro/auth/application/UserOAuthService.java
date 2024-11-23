@@ -26,8 +26,6 @@ public class UserOAuthService {
     private final JwtProvider jwtProvider;
     private final RedisTokenService redisTokenService;
 
-    @Value("${oauth2.login-url}")
-    private String loginUrl;
     @Value("${oauth2.client-id}")
     private String clientId;
     @Value("${oauth2.client-secret}")
@@ -39,11 +37,6 @@ public class UserOAuthService {
     @Value("${oauth2.user-info-uri}")
     private String userInfoUri;
 
-    public String getUrl() {
-        return loginUrl + "?client_id=" + clientId + "&redirect_uri=" + redirectUri
-                + "&response_type=code&scope=email profile";
-    }
-
     public UserToken authenticateUser(String code) {
         String token = getOAuthToken(code);
         return getUserToken(token);
@@ -52,7 +45,7 @@ public class UserOAuthService {
     private String getOAuthToken(String code) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("https://oauth2.googleapis.com")
+                .baseUrl(tokenUri)
                 .build();
 
         Map<String, Object> requestBody = new HashMap<>();
@@ -61,9 +54,9 @@ public class UserOAuthService {
         requestBody.put("client_secret", clientSecret);
         requestBody.put("redirect_uri", redirectUri);
         requestBody.put("grant_type", "authorization_code");
+
         Map<String, Object> response = webClient.post()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/token")
                         .queryParam("code", code)
                         .build())
                 .header(HttpHeaders.ACCEPT, "application/json")
@@ -79,12 +72,11 @@ public class UserOAuthService {
     private UserCreateRequest getUserProfile(String accessToken) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("https://www.googleapis.com")
+                .baseUrl(userInfoUri)
                 .build();
 
         Map<String, Object> response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("userinfo/v2/me")
                         .queryParam("access_token", accessToken)
                         .build())
                 .retrieve()
@@ -103,6 +95,6 @@ public class UserOAuthService {
                 .map(User::getId)  // if user exists
                 .orElseGet(() -> userService.createUser(true, userProfile));
 
-        return jwtProvider.generateAuthToken(id);
+        return jwtProvider.generateAuthToken(id, userService.findByEmail(userProfile.email()).get());
     }
 }
