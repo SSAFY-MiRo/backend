@@ -39,6 +39,8 @@ public class AttractionController {
             @RequestParam(value = "attractionType", required = false) List<Integer> attractionType
             ) {
         log.info("page = {}", pageable);
+        log.info("guguns = {}", guguns);
+        log.info("attractionType = {}", attractionType);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(
                 attractionService.selectAllAttractions(
                         pageable, AttractionSearchFilter.of(keyword, sido, guguns, attractionType)
@@ -57,7 +59,7 @@ public class AttractionController {
     }
 
     @GetMapping("/gungu")
-    public ResponseEntity<ApiResponse<List<GugunItem>>> getGunGus(@RequestParam Integer sidoCode) {
+    public ResponseEntity<ApiResponse<List<GugunItem>>> getGunGus(@RequestParam("sido") Integer sidoCode) {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.getAttractionGungus(sidoCode)));
     }
 
