@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,8 @@ public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
 
         // QueryDSL 쿼리 실행
         List<ArticleItems> content = queryFactory
-                .select(Projections.constructor(ArticleItems.class, article.id, article.title, article.view, article.createdAt, articleLike.count().as("likeCount")))
+                .select(Projections.constructor(ArticleItems.class, article.id, article.user.nickname, article.title,
+                        article.view, article.createdAt, articleLike.count().as("likeCount")))
                 .from(article)
                 .leftJoin(articleLike).on(articleLike.article.eq(article))
                 .where(builder)
@@ -61,6 +63,7 @@ public class ArticleRepositoryCustomImpl implements ArticleRepositoryCustom {
 
         // 기본 조건: 카테고리
         builder.and(article.category.eq(articleCategory));
+        builder.and(article.deleted.eq(false));
 
         // 검색 조건
         if (search != null) {
