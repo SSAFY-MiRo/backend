@@ -66,7 +66,7 @@ public class UserService {
         return UserInfo.of(user);
     }
 
-    private User findById(Long id){
+    public User findById(Long id){
         return userRepository.findById(id).orElseThrow(()->new GlobalException(NOT_FOUND_USER_ID));
     }
 

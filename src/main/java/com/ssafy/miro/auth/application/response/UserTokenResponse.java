@@ -1,4 +1,6 @@
 package com.ssafy.miro.auth.application.response;
 
-public record UserTokenResponse(String accessToken) {
+import com.ssafy.miro.user.application.response.UserInfo;
+
+public record UserTokenResponse(String accessToken, UserInfo userInfo) {
 }
