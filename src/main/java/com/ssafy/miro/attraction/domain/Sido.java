@@ -17,6 +17,6 @@ public class Sido {
     private Long no;
     @Column(name = "sido_code")
     private int code;
-    @Column(length = 20)
+    @Column(length = 20, name = "sido_name")
     private String name;
 }
