@@ -35,15 +35,7 @@ public class ArticleService {
     }
 
     public Page<ArticleItems> getBoards(ArticleCategory articleCategory, String search, ArticleSearchType articleSearchType, Pageable pageable) {
-        if(search==null){
-            return articleRepository.findAllByCategory(articleCategory, pageable).map(ArticleItems::of);
-        } else if(articleSearchType.equals(ArticleSearchType.TITLE)){
-            return articleRepository.findAllByCategoryAndTitleContaining(articleCategory, search, pageable).map(ArticleItems::of);
-        } else if (articleSearchType.equals(ArticleSearchType.ANY)) {
-            return articleRepository.findAllByCategoryAndTitleContainingOrContentContaining(articleCategory, search, search, pageable).map(ArticleItems::of);
-        } else { //사용자 검색도 해야 함
-            return null;
-        }
+        return articleRepository.getArticleItems(articleCategory, search, articleSearchType, pageable);
     }
 
     public ArticleItem getBoard(User user, Long id) {
