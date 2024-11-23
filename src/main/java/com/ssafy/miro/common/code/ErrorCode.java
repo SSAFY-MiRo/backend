@@ -38,6 +38,7 @@ public enum ErrorCode {
 
     //Attraction
     NOT_FOUND_ATTRACTION_ID(3100, NOT_FOUND, "요청한 ID에 해당하는 관광지가 존재하지 않습니다."),
+    NOT_FOUND_SIDO_CODE(3101, NOT_FOUND, "요청한 CODE에 해당하는 SIDO가 존재하지 않습니다."),
 
     //Plan
     NOT_FOUND_PLAN_ID(3200, NOT_FOUND, "요청한 ID에 해당하는 여행 계획이 존재하지 않습니다."),
