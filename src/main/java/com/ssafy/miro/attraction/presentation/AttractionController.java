@@ -38,6 +38,7 @@ public class AttractionController {
             @RequestParam(value = "gugun", required = false) List<Integer> guguns,
             @RequestParam(value = "attractionType", required = false) List<Integer> attractionType
             ) {
+        log.info("page = {}", pageable);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(
                 attractionService.selectAllAttractions(
                         pageable, AttractionSearchFilter.of(keyword, sido, guguns, attractionType)
