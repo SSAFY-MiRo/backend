@@ -7,6 +7,8 @@ import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.code.SuccessCode;
 import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.common.redis.RedisTokenService;
+import com.ssafy.miro.user.application.response.UserInfo;
+import com.ssafy.miro.user.domain.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -47,11 +49,11 @@ public class JwtProvider {
         this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
-    public UserToken generateAuthToken(Long id) {
+    public UserToken generateAuthToken(Long id, User user) {
         String accessToken = createToken(id);
         String refreshToken = createToken(id);
         redisTokenService.saveToken(refreshToken, String.valueOf(id), 3600);
-        return new UserToken(id, accessToken, refreshToken);
+        return new UserToken(id, accessToken, refreshToken, UserInfo.of(user));
     }
 
     public void validateTokens(String accessToken, String refreshToken) {
@@ -100,14 +102,14 @@ public class JwtProvider {
                 .signWith(secretKey).compact();
     }
 
-    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, String accessToken, String refreshToken) {
+    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, String accessToken, String refreshToken, UserInfo userInfo) {
         Cookie cookie = new Cookie("refresh-token", refreshToken);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(ApiResponse.of(SuccessCode.AUTH_SUCCESS, new UserTokenResponse(accessToken)));
+        return ResponseEntity.ok(ApiResponse.of(SuccessCode.AUTH_SUCCESS, new UserTokenResponse(accessToken, userInfo)));
     }
 
     public String regenerateAccessToken(Long id) {

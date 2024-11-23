@@ -5,6 +5,8 @@ import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.auth.Auth;
 import com.ssafy.miro.common.jwt.JwtProvider;
 import com.ssafy.miro.common.redis.RedisTokenService;
+import com.ssafy.miro.user.application.UserService;
+import com.ssafy.miro.user.application.response.UserInfo;
 import com.ssafy.miro.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserTokenController {
     private final JwtProvider jwtProvider;
     private final RedisTokenService redisTokenService;
+    private final UserService userService;
 
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<UserTokenResponse>> refreshToken(@CookieValue("refresh-token") String refreshToken) {
@@ -33,7 +36,7 @@ public class UserTokenController {
 
         String newAccessToken = jwtProvider.regenerateAccessToken(userId);
 
-        return ResponseEntity.ok().body(ApiResponse.onSuccess(new UserTokenResponse(newAccessToken)));
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(new UserTokenResponse(newAccessToken, UserInfo.of(userService.findById(userId)))));
     }
 
     @GetMapping("/test")

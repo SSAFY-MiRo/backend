@@ -95,6 +95,6 @@ public class UserOAuthService {
                 .map(User::getId)  // if user exists
                 .orElseGet(() -> userService.createUser(true, userProfile));
 
-        return jwtProvider.generateAuthToken(id);
+        return jwtProvider.generateAuthToken(id, userService.findByEmail(userProfile.email()).get());
     }
 }
