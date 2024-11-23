@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ArticleRepository extends JpaRepository<Article, Long> {
+public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleRepositoryCustom {
     Page<Article> findAllByCategory(ArticleCategory category, Pageable pageable);
     Page<Article> findAllByCategoryAndTitleContaining(ArticleCategory category, String title, Pageable pageable);
     Page<Article> findAllByCategoryAndTitleContainingOrContentContaining(ArticleCategory category, String title, String content, Pageable pageable);

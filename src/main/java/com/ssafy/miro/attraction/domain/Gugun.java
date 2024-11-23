@@ -12,8 +12,8 @@ public class Gugun {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int no;
     @OneToOne
-    @JoinColumn(name = "sido_code")
-    private Sido sidoCode;
+    @JoinColumn(name = "sido_code", referencedColumnName = "sido_code")
+    private Sido sido;
     private int gugunCode;
     @Column(length = 20)
     private String gugunName;

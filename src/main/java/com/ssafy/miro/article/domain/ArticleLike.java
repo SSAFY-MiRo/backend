@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "article_like")
+@Entity(name = "article_likes")
 @NoArgsConstructor
 @Getter
 public class ArticleLike {
