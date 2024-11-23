@@ -3,6 +3,7 @@ package com.ssafy.miro.article.presentation;
 import com.ssafy.miro.article.application.ArticleService;
 import com.ssafy.miro.article.application.response.ArticleItem;
 import com.ssafy.miro.article.application.response.ArticleItems;
+import com.ssafy.miro.article.application.response.ArticleLikeItem;
 import com.ssafy.miro.article.domain.ArticleCategory;
 import com.ssafy.miro.article.domain.ArticleSearchType;
 import com.ssafy.miro.article.presentation.request.ArticleCreateRequest;
@@ -63,9 +64,9 @@ public class ArticleController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> updateLike(@Auth User user, @PathVariable Long id) {
-        articleService.updateLike(user, id);
-        return ResponseEntity.ok(ApiResponse.onSuccess(null));
+    public ResponseEntity<ApiResponse<ArticleLikeItem>> updateLike(@Auth User user, @PathVariable Long id) {
+        ArticleLikeItem articleLikeItem = articleService.updateLike(user, id);
+        return ResponseEntity.ok(ApiResponse.onSuccess(articleLikeItem));
     }
 
 
