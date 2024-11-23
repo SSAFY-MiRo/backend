@@ -37,7 +37,7 @@ dependencies {
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-    // security & OAuth
+    // OAuth
     implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '6.3.4'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.6'
