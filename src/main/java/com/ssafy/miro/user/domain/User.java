@@ -64,4 +64,8 @@ public class User extends BaseEntity {
     public static boolean checkPassword(String plainPassword, String hashedPassword) {
         return BCrypt.checkpw(plainPassword, hashedPassword);
     }
+
+    public void updateUserType(UserType userType){
+        this.userType=userType;
+    }
 }
