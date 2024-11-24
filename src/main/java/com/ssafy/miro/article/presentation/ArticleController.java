@@ -48,7 +48,7 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ArticleItem>> getBoardById(@NonEssential User user, @PathVariable Long id) {
-        return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoard(user, id)));
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(articleService.getBoardDetail(user, id)));
     }
 
     @PutMapping("/{id}")
@@ -65,8 +65,7 @@ public class ArticleController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<ArticleLikeItem>> updateLike(@Auth User user, @PathVariable Long id) {
-        ArticleLikeItem articleLikeItem = articleService.updateLike(user, id);
-        return ResponseEntity.ok(ApiResponse.onSuccess(articleLikeItem));
+        return ResponseEntity.ok(ApiResponse.onSuccess(articleService.updateLike(user, id)));
     }
 
 

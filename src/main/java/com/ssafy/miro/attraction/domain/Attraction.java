@@ -28,7 +28,7 @@ public class Attraction {
     @ColumnDefault("0")
     private Long view=0L;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "si_gun_gu_code", referencedColumnName = "gugunCode")
+    @JoinColumn(name = "si_gun_gu_code", referencedColumnName = "si_gun_gu_code")
     private Gugun guGunCode;
     @Column(length = 100)
     private String firstImage1;
