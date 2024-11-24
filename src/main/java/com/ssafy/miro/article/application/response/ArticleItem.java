@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 public record ArticleItem(
         Long id,
+        Long userId,
         String nickname,
         String title,
         String content,
@@ -18,6 +19,6 @@ public record ArticleItem(
         Boolean isLike
 ) {
     public static ArticleItem of(Article article, Long like, Boolean isLike) {
-        return new ArticleItem(article.getId(), article.getUser().getNickname(), article.getTitle(), article.getContent(), article.getView(), article.getCreatedAt(), like, isLike);
+        return new ArticleItem(article.getId(), article.getUser().getId(), article.getUser().getNickname(), article.getTitle(), article.getContent(), article.getView(), article.getCreatedAt(), like, isLike);
     }
 }

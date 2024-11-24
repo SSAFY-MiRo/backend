@@ -39,10 +39,11 @@ public class ArticleService {
         return articleRepository.getArticleItems(articleCategory, search, articleSearchType, pageable);
     }
 
-    public ArticleItem getBoard(User user, Long id) {
-        Article article = articleRepository.findById(id).orElseThrow(() -> new GlobalException(NOT_FOUND_BOARD_ID));
+    @Transactional
+    public ArticleItem getBoardDetail(User user, Long id){
+        Article article = findById(id);
+        article.increaseView();
         ArticleLikeItem articleLikeAndLiked = getArticleLikeAndLiked(article, user);
-        //사용자 like 했는지 안했는지 해줘야 함
         return ArticleItem.of(article,articleLikeAndLiked.likeCount(),articleLikeAndLiked.liked());
     }
 
