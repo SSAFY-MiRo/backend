@@ -109,6 +109,7 @@ public class JwtProvider {
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
+        log.info("토큰 전달됨 = {}", accessToken);
         return ResponseEntity.ok(ApiResponse.of(SuccessCode.AUTH_SUCCESS, new UserTokenResponse(accessToken, userInfo)));
     }
 
@@ -130,7 +131,7 @@ public class JwtProvider {
 
 
     private String extractRefreshToken(Cookie... cookies) {
-        if (cookies == null) throw new GlobalException(JWT_NOT_FOUND);
+        if (cookies == null) throw new GlobalException(INVALID_REFRESH_TOKEN);
 
         return Arrays.stream(cookies)
                 .filter(this::isValidRefreshToken)

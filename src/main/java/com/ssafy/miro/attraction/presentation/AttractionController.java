@@ -49,7 +49,7 @@ public class AttractionController {
     }
 
     @GetMapping("{no}")
-    public ResponseEntity<ApiResponse<AttractionDetailItem>> getAttraction(@Auth User user, @PathVariable("no") Integer no) {
+    public ResponseEntity<ApiResponse<AttractionDetailItem>> getAttraction(@NonEssential User user, @PathVariable("no") Integer no) {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.getAttractionDetail(user, no)));
     }
 
