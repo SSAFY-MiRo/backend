@@ -38,6 +38,7 @@ public class AttractionController {
             @RequestParam(value = "gugun", required = false) List<String> guguns,
             @RequestParam(value = "attractionType", required = false) List<Integer> attractionType
             ) {
+        log.info("sido = {}", sido);
         log.info("page = {}", pageable);
         log.info("guguns = {}", guguns);
         log.info("attractionType = {}", attractionType);
