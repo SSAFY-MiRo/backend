@@ -35,8 +35,16 @@ public class AttractionRepositoryCustomImpl implements AttractionRepositoryCusto
 
         // QueryDSL 쿼리 실행
         List<AttractionListItem> content = queryFactory
-                .select(Projections.constructor(AttractionListItem.class, attraction.contentType.id, attraction.view, attraction.title, attraction.firstImage1,
-                                attraction.addr1, attraction.homepage, attraction.overview))
+                .select(Projections.constructor(AttractionListItem.class,
+                        attraction.no,
+                        attraction.title,
+                        attraction.contentType.name,
+                        attraction.view,
+                        attraction.firstImage1,
+                        attraction.addr1,
+                        attraction.homepage,
+                        attraction.overview
+                ))
                 .from(attraction)
                 .where(builder)
                 .orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]))

@@ -12,6 +12,6 @@ public class ContentType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "content_type_id")
     private Integer id;
-    @Column(nullable = false, length = 50)
+    @Column(name = "content_type_name", nullable = false, length = 50)
     private String name;
 }
