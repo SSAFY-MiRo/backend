@@ -41,7 +41,7 @@ public class Article extends BaseEntity {
         this.content = content;
     }
 
-    public void updateDelete() {
-        this.updateDeleted();
+    public void increaseView(){
+        this.view++;
     }
 }
