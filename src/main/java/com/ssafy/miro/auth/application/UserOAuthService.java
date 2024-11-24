@@ -5,6 +5,7 @@ import com.ssafy.miro.common.redis.RedisTokenService;
 import com.ssafy.miro.user.application.UserService;
 import com.ssafy.miro.user.domain.User;
 import com.ssafy.miro.auth.domain.dto.UserToken;
+import com.ssafy.miro.user.domain.UserType;
 import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -93,7 +94,7 @@ public class UserOAuthService {
         UserCreateRequest userProfile = getUserProfile(accessToken);
         Long id = userService.findByEmail(userProfile.email())
                 .map(User::getId)  // if user exists
-                .orElseGet(() -> userService.createUser(true, userProfile));
+                .orElseGet(() -> userService.createUser(true, userProfile, UserType.USER));
 
         return jwtProvider.generateAuthToken(id, userService.findByEmail(userProfile.email()).get());
     }

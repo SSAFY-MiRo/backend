@@ -20,9 +20,9 @@ public class EmailController {
         return ResponseEntity.ok().body(ApiResponse.of(VERIFIED_EMAIL, null));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<ApiResponse<Object>> test() {
-        emailService.sendVerificationEmail("hobby0519@gmail.com");
+    @GetMapping("/send-email")
+    public ResponseEntity<ApiResponse<Object>> test(@RequestParam String email) {
+        emailService.sendVerificationEmail(email);
         return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
     }
 }

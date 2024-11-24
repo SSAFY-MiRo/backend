@@ -12,7 +12,7 @@ public record UserCreateRequest(
         @NotBlank String password,
         @NotBlank String nickName
 ) {
-    public User toUser(boolean isOAuth) {
-        return new User(this.email, this.password, this.nickName, UserType.USER, "/", isOAuth);
+    public User toUser(boolean isOAuth, UserType userType) {
+        return new User(this.email, this.password, this.nickName, userType, "/", isOAuth);
     }
 }

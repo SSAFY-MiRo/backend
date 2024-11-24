@@ -1,9 +1,12 @@
 package com.ssafy.miro.user.application;
 
+import com.ssafy.miro.auth.domain.dto.UserToken;
 import com.ssafy.miro.common.exception.GlobalException;
+import com.ssafy.miro.common.jwt.JwtProvider;
 import com.ssafy.miro.image.application.ImageService;
 import com.ssafy.miro.user.application.response.UserInfo;
 import com.ssafy.miro.user.domain.User;
+import com.ssafy.miro.user.domain.UserType;
 import com.ssafy.miro.user.domain.repository.UserRepository;
 import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import com.ssafy.miro.user.presentation.request.UserLoginRequest;
@@ -25,20 +28,25 @@ import static com.ssafy.miro.common.code.ErrorCode.*;
 public class UserService {
     private final UserRepository userRepository;
     private final ImageService imageService;
+    private final JwtProvider  jwtProvider;
 
 
     @Transactional
-    public Long createUser(boolean isOAuth, UserCreateRequest userCreateRequest) {
+    public Long createUser(boolean isOAuth, UserCreateRequest userCreateRequest, UserType userType) {
         findByEmail(userCreateRequest.email()).ifPresent(user->{throw new GlobalException(EMAIL_DUPLICATED);});
-        return userRepository.save(userCreateRequest.toUser(isOAuth)).getId();
+        return userRepository.save(userCreateRequest.toUser(isOAuth, userType)).getId();
     }
 
-    public UserInfo loginUser(UserLoginRequest userLoginRequest) {
+    public UserToken loginUser(UserLoginRequest userLoginRequest) {
         User user=findUserByEmail(userLoginRequest.email());
+        if(user.isDeleted()||!user.getUserType().equals(UserType.USER)) {
+            throw new GlobalException(NOT_FOUND_USER_ID);
+        }
         if(!User.checkPassword(userLoginRequest.password(), user.getPassword())){
             throw new GlobalException(NON_VALIDATED_PASSWORD);
         };
-        return UserInfo.of(user);
+
+        return jwtProvider.generateAuthToken(user.getId(), user);
     }
 
     public void validatePassword(User user, String password) {
@@ -71,10 +79,10 @@ public class UserService {
     }
 
     public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmailAndDeleted(email, false);
     }
 
-    private User findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         return findByEmail(email).orElseThrow(()->new GlobalException(NOT_FOUND_USER_EMAIL));
     }
 
