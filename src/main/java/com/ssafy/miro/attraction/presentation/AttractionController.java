@@ -35,7 +35,7 @@ public class AttractionController {
             @PageableDefault Pageable pageable,
             @RequestParam(value = "sido") Integer sido,
             @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "gugun", required = false) List<Integer> guguns,
+            @RequestParam(value = "gugun", required = false) List<String> guguns,
             @RequestParam(value = "attractionType", required = false) List<Integer> attractionType
             ) {
         log.info("page = {}", pageable);

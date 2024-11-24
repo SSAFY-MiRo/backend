@@ -122,6 +122,8 @@ public class JwtProvider {
         String refreshToken = extractRefreshToken(request.getCookies());
         String accessToken = bearerAuthorizationExtractor.extractAccessToken(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
 
+        System.out.println(">>>>>>>>>>>>>>>"+accessToken);
+
         // 유효성 검사
         validateTokens(accessToken, refreshToken);
 
