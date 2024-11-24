@@ -2,13 +2,19 @@ package com.ssafy.miro.email.application;
 
 import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.common.redis.RedisTokenService;
+import com.ssafy.miro.user.application.UserService;
+import com.ssafy.miro.user.domain.User;
+import com.ssafy.miro.user.domain.UserType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.ssafy.miro.common.code.ErrorCode.*;
@@ -18,6 +24,7 @@ import static com.ssafy.miro.common.code.ErrorCode.*;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final RedisTokenService redisTokenService;
+    private final UserService userService;
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
     private String emailPrefix = "emailValidation: ";
@@ -40,11 +47,14 @@ public class EmailService {
         return UUID.randomUUID().toString();
     }
 
+    @Transactional
     public void verifyEmail(String verificationCode) {
         String emailByToken = redisTokenService.getToken(emailPrefix+verificationCode);
         if(emailByToken==null) {
             throw new GlobalException(NOT_FOUND_EMAIL_TOKEN_ID);
         }
+        User user = userService.findUserByEmail(emailByToken);
+        user.updateUserType(UserType.USER);
         redisTokenService.deleteToken(emailPrefix+verificationCode);
 
     }
