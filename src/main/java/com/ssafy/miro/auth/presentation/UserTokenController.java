@@ -39,11 +39,6 @@ public class UserTokenController {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(new UserTokenResponse(newAccessToken, UserInfo.of(userService.findById(userId)))));
     }
 
-    @GetMapping("/test")
-    public void testet(@Auth User user) {
-        log.info("user_name = {}, user_email = {}", user.getNickname(), user.getEmail());
-    }
-
     @DeleteMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logout(@CookieValue ("refresh-token") String refreshToken) {
         redisTokenService.deleteToken(refreshToken);
