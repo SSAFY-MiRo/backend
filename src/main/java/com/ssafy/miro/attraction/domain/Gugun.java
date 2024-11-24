@@ -14,7 +14,8 @@ public class Gugun {
     @OneToOne
     @JoinColumn(name = "sido_code", referencedColumnName = "sido_code")
     private Sido sido;
-    private int gugunCode;
+    @Column(name = "si_gun_gu_code")
+    private String gugunCode;
     @Column(length = 20)
     private String gugunName;
 }
