@@ -24,7 +24,7 @@ import static com.ssafy.miro.common.code.SuccessCode.*;
 
 @Slf4j
 @RestController
-@RequestMapping("api/vi/comment")
+@RequestMapping("api/v1/comment")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;

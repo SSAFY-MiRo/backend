@@ -56,7 +56,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(User user, MultipartFile file, UserUpdateRequest userUpdateRequest) throws IOException {
+    public UserInfo updateUser(User user, MultipartFile file, UserUpdateRequest userUpdateRequest) throws IOException {
         System.out.println(userUpdateRequest.toString());
         if(!userUpdateRequest.password().equals(userUpdateRequest.passwordConfirm())) {
             throw new GlobalException(NON_VALIDATED_PASSWORD);
@@ -68,6 +68,7 @@ public class UserService {
         } else {
             user.updateUser(userUpdateRequest.nickname(), userUpdateRequest.password());
         }
+        return UserInfo.of(user);
     }
 
     public UserInfo getUserInfo(User user) {

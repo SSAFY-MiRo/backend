@@ -57,9 +57,9 @@ public class UserController {
     }
 
     @PutMapping(consumes = "multipart/form-data")
-    public ResponseEntity<ApiResponse<Object>> updateUser(@Auth User user, @RequestParam(value = "file", required = false) MultipartFile file, @ModelAttribute @Valid UserUpdateRequest userUpdateRequest) throws IOException {
-        userService.updateUser(user, file, userUpdateRequest);
-        return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
+    public ResponseEntity<ApiResponse<UserInfo>> updateUser(@Auth User user, @RequestParam(value = "file", required = false) MultipartFile file, @ModelAttribute @Valid UserUpdateRequest userUpdateRequest) throws IOException {
+        UserInfo userInfo = userService.updateUser(user, file, userUpdateRequest);
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(userInfo));
     }
 
 }
