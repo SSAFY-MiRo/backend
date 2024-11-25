@@ -12,6 +12,7 @@ import com.ssafy.miro.attraction.domain.item.GugunItem;
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.auth.Auth;
 import com.ssafy.miro.common.auth.NonEssential;
+import com.ssafy.miro.common.code.SuccessCode;
 import com.ssafy.miro.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,9 +55,9 @@ public class AttractionController {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.getAttractionDetail(user, no)));
     }
 
-    @PatchMapping("/like/{no}")
+    @PostMapping("/like/{no}")
     public ResponseEntity<ApiResponse<AttractionLikeItem>> setLikeAttraction(@Auth User user, @PathVariable("no") Integer no) {
-        return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.likeHandler(user, no)));
+        return ResponseEntity.ok().body(ApiResponse.of(SuccessCode.OK, attractionService.likeHandler(user, no)));
     }
 
     @GetMapping("/gungu")
