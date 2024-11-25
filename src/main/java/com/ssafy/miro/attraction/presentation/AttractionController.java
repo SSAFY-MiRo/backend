@@ -38,6 +38,7 @@ public class AttractionController {
             @RequestParam(value = "gugun", required = false) List<String> guguns,
             @RequestParam(value = "attractionType", required = false) List<Integer> attractionType
             ) {
+        log.info("sido = {}", sido);
         log.info("page = {}", pageable);
         log.info("guguns = {}", guguns);
         log.info("attractionType = {}", attractionType);
@@ -49,7 +50,7 @@ public class AttractionController {
     }
 
     @GetMapping("{no}")
-    public ResponseEntity<ApiResponse<AttractionDetailItem>> getAttraction(@Auth User user, @PathVariable("no") Integer no) {
+    public ResponseEntity<ApiResponse<AttractionDetailItem>> getAttraction(@NonEssential User user, @PathVariable("no") Integer no) {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(attractionService.getAttractionDetail(user, no)));
     }
 
