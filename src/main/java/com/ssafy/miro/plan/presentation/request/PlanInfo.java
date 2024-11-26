@@ -1,5 +1,6 @@
 package com.ssafy.miro.plan.presentation.request;
 
+import com.ssafy.miro.plan.domain.Plan;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,4 +12,7 @@ public record PlanInfo(
         @NotNull Date startDate,
         @NotNull Date endDate
 ) {
+    public static PlanInfo of(Plan plan) {
+        return new PlanInfo(plan.getTitle(), plan.getLocation(), plan.getStartDate(), plan.getEndDate());
+    }
 }

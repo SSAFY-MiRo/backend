@@ -5,6 +5,7 @@ import com.ssafy.miro.attraction.domain.Attraction;
 import com.ssafy.miro.attraction.domain.repository.SidoRespository;
 import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.plan.application.response.PlanDetailResponse;
+import com.ssafy.miro.plan.application.response.PlanEditDetailResponse;
 import com.ssafy.miro.plan.application.response.PlanItem;
 import com.ssafy.miro.plan.domain.Plan;
 import com.ssafy.miro.plan.domain.PlanAttraction;
@@ -65,6 +66,12 @@ public class PlanService {
         return planRepository.findAllByUser(user).stream().map(PlanItem::of).toList();
     }
 
+    public PlanEditDetailResponse getPlanEditInfo(User user, Long planId) {
+        Plan plan = ownerPlan(user, planId);
+        List<PlanLocations> list = planAttractionRespository.findAllByPlan(plan).stream().map(PlanLocations::of).toList();
+        return PlanEditDetailResponse.of(PlanInfo.of(plan), list);
+    }
+
     private Plan savePlan(User user, PlanInfo planInfo) {
         return planRepository.save(Plan.of(user, planInfo));
     }
@@ -78,7 +85,7 @@ public class PlanService {
     }
 
     private Plan ownerPlan(User user, Long planId){
-        Plan plan=findPlanById(planId);
+        Plan plan = findPlanById(planId);
         if(!plan.getUser().equals(user)){
             throw new GlobalException(NOT_OWNER_PLAN);
         }

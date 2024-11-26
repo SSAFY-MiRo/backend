@@ -42,7 +42,6 @@ public class AttractionService {
         return attractionRepository.findAttractions(filter, pageable);
     }
 
-    @Transactional(readOnly = true)
     public AttractionDetailItem getAttractionDetail(User user, Integer attractionNo) {
         Attraction attraction = attractionRepository.findById(attractionNo).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
         AttractionLikeItem attractionLikeItem = getAttractionLikeInfo(user, attractionNo);
