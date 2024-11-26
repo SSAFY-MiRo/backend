@@ -1,6 +1,8 @@
 package com.ssafy.miro.user.application;
 
+import com.ssafy.miro.auth.application.response.UserTokenResponse;
 import com.ssafy.miro.auth.domain.dto.UserToken;
+import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.exception.GlobalException;
 import com.ssafy.miro.common.jwt.JwtProvider;
 import com.ssafy.miro.image.application.ImageService;
@@ -11,7 +13,9 @@ import com.ssafy.miro.user.domain.repository.UserRepository;
 import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import com.ssafy.miro.user.presentation.request.UserLoginRequest;
 import com.ssafy.miro.user.presentation.request.UserUpdateRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +41,7 @@ public class UserService {
         return userRepository.save(userCreateRequest.toUser(isOAuth, userType)).getId();
     }
 
-    public UserToken loginUser(UserLoginRequest userLoginRequest) {
+    public ResponseEntity<ApiResponse<UserTokenResponse>> loginUser(UserLoginRequest userLoginRequest, HttpServletResponse response) {
         User user=findUserByEmail(userLoginRequest.email());
         if(user.isDeleted()||!user.getUserType().equals(UserType.USER)) {
             throw new GlobalException(NOT_FOUND_USER_ID);
@@ -46,7 +50,9 @@ public class UserService {
             throw new GlobalException(NON_VALIDATED_PASSWORD);
         };
 
-        return jwtProvider.generateAuthToken(user.getId(), user);
+        UserToken userToken=jwtProvider.generateAuthToken(user.getId(), user);
+
+        return jwtProvider.sendToken(response, userToken);
     }
 
     public void validatePassword(User user, String password) {
