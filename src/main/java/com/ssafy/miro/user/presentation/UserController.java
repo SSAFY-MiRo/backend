@@ -1,5 +1,6 @@
 package com.ssafy.miro.user.presentation;
 
+import com.ssafy.miro.auth.application.response.UserTokenResponse;
 import com.ssafy.miro.auth.domain.dto.UserToken;
 import com.ssafy.miro.common.ApiResponse;
 import com.ssafy.miro.common.auth.Auth;
@@ -12,6 +13,7 @@ import com.ssafy.miro.user.presentation.request.UserCheckPwdRequest;
 import com.ssafy.miro.user.presentation.request.UserCreateRequest;
 import com.ssafy.miro.user.presentation.request.UserLoginRequest;
 import com.ssafy.miro.user.presentation.request.UserUpdateRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,9 +40,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<UserToken>> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
-        UserToken userInfo = userService.loginUser(userLoginRequest);
-        return ResponseEntity.ok().body(ApiResponse.onSuccess(userInfo));
+    public ResponseEntity<ApiResponse<UserTokenResponse>> login(@RequestBody @Valid UserLoginRequest userLoginRequest, HttpServletResponse response) {
+        return userService.loginUser(userLoginRequest, response);
     }
 
     @PostMapping("/verify-password")
