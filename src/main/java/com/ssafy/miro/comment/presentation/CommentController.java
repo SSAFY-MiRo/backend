@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,12 +39,12 @@ public class CommentController {
     @GetMapping
     public ResponseEntity<ApiResponse<Page<CommentItem>>> getComments(
             @RequestParam("articleId") Long articleId,
-            @PageableDefault(size = 10, page = 0) Pageable pageable
+            @PageableDefault(size = 10, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(commentService.selectAllComment(articleId, pageable)));
     }
 
-    @PutMapping("{id}")
+    @PutMapping
     public ResponseEntity<ApiResponse<Object>> updateComment(@Auth User user, @RequestBody CommentUpdateRequest updateCommentRequest) {
         Long id = commentService.updateComment(user, updateCommentRequest);
         return ResponseEntity.ok().body(ApiResponse.of(UPDATE_COMMENT, id));

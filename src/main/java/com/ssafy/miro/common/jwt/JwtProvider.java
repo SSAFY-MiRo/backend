@@ -102,15 +102,15 @@ public class JwtProvider {
                 .signWith(secretKey).compact();
     }
 
-    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, String accessToken, String refreshToken, UserInfo userInfo) {
-        Cookie cookie = new Cookie("refresh-token", refreshToken);
+    public ResponseEntity<ApiResponse<UserTokenResponse>> sendToken(HttpServletResponse response, UserToken userToken) {
+        Cookie cookie = new Cookie("refresh-token", userToken.refreshToken());
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
-        log.info("토큰 전달됨 = {}", accessToken);
-        return ResponseEntity.ok(ApiResponse.of(SuccessCode.AUTH_SUCCESS, new UserTokenResponse(accessToken, userInfo)));
+        log.info("토큰 전달됨 = {}", userToken.accessToken());
+        return ResponseEntity.ok(ApiResponse.of(SuccessCode.AUTH_SUCCESS, new UserTokenResponse(userToken.accessToken(), userToken.userInfo())));
     }
 
     public String regenerateAccessToken(Long id) {
