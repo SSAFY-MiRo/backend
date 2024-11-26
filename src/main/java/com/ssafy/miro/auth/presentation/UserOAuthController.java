@@ -32,9 +32,7 @@ public class UserOAuthController {
         UserToken userToken = userOAuthService.authenticateUser(tokenCodeRequest.code());
         return jwtProvider.sendToken(
                 response,
-                userToken.getAccessToken(),
-                userToken.getRefreshToken(),
-                userToken.getUserInfo());
+                userToken);
     }
 
     @PostMapping("/user-info")
