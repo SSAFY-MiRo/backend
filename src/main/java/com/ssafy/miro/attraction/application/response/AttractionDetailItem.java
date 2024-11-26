@@ -3,7 +3,9 @@ package com.ssafy.miro.attraction.application.response;
 import com.ssafy.miro.attraction.domain.Attraction;
 
 public record AttractionDetailItem(
+        Integer no,
         Integer contentTypeId,
+        Integer sido,
         Long view,
         String title,
         String firstImage1,
@@ -15,7 +17,9 @@ public record AttractionDetailItem(
 ) {
     public static AttractionDetailItem of(Attraction attraction, AttractionLikeItem attractionLikeItem) {
         return new AttractionDetailItem(
+                attraction.getNo(),
                 attraction.getContentType().getId(),
+                attraction.getSido().getCode(),
                 attraction.getView(),
                 attraction.getTitle(),
                 attraction.getFirstImage1(),

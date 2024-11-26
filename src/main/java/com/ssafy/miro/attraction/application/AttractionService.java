@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,26 +31,18 @@ import static com.ssafy.miro.common.code.ErrorCode.*;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class AttractionService {
     private final AttractionRepository attractionRepository;
     private final AttractionLikeRepository attractionLikeRepository;
     private final GugunRespository gugunRespository;
 
+    @Transactional(readOnly = true)
     public Page<AttractionListItem> selectAllAttractions(Pageable pageable, AttractionSearchFilter filter) {
         return attractionRepository.findAttractions(filter, pageable);
     }
 
-    public AttractionLikeItem likeHandler(User user, Integer attractionNo) {
-        if (attractionLikeRepository.existsByUserIdAndAttractionNo(user.getId(), attractionNo)) {
-            attractionLikeRepository.deleteByUserIdAndAttractionNo(user.getId(), attractionNo);
-            return AttractionLikeItem.of(attractionLikeRepository.countByAttractionNo(attractionNo), false);
-        }
-
-        Attraction attraction = attractionRepository.findById(attractionNo).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
-        attractionLikeRepository.save(new AttractionLike(attraction, user));
-        return AttractionLikeItem.of(attractionLikeRepository.countByAttractionNo(attractionNo), true);
-    }
-
+    @Transactional(readOnly = true)
     public AttractionDetailItem getAttractionDetail(User user, Integer attractionNo) {
         Attraction attraction = attractionRepository.findById(attractionNo).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
         AttractionLikeItem attractionLikeItem = getAttractionLikeInfo(user, attractionNo);
@@ -58,10 +51,21 @@ public class AttractionService {
         return AttractionDetailItem.of(attraction, attractionLikeItem);
     }
 
+    public AttractionLikeItem likeHandler(User user, Integer attractionNo) {
+        if (attractionLikeRepository.existsByUserIdAndAttractionNo(user.getId(), attractionNo)) {
+            attractionLikeRepository.removeByUserIdAndAttractionNo(user.getId(), attractionNo);
+            return AttractionLikeItem.of(attractionLikeRepository.countByAttractionNo(attractionNo), false);
+        }
+
+        Attraction attraction = attractionRepository.findById(attractionNo).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
+        attractionLikeRepository.save(new AttractionLike(attraction, user));
+        return AttractionLikeItem.of(attractionLikeRepository.countByAttractionNo(attractionNo), true);
+    }
+    @Transactional(readOnly = true)
     public Attraction findAttractionById(Integer no) {
         return attractionRepository.findById(no).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ATTRACTION_ID));
     }
-
+    @Transactional(readOnly = true)
     public List<GugunItem> getAttractionGungus(Integer sidoCode) {
         List<Gugun> allBySidoCode = gugunRespository.findAllBySidoCode(sidoCode);
         return allBySidoCode.stream().map(GugunItem::of).toList();
