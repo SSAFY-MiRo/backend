@@ -22,12 +22,12 @@ public class Attraction {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_type_id")
     private ContentType contentType;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "area_code", referencedColumnName = "sido_code")
     private Sido sido;
     @ColumnDefault("0")
     private Long view=0L;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "si_gun_gu_code", referencedColumnName = "si_gun_gu_code")
     private Gugun guGunCode;
     @Column(length = 100)

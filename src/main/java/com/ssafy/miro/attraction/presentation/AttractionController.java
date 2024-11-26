@@ -34,7 +34,7 @@ public class AttractionController {
     @GetMapping
     public ResponseEntity<ApiResponse<Page<AttractionListItem>>> getAttractions(
             @PageableDefault Pageable pageable,
-            @RequestParam(value = "sido") Integer sido,
+            @RequestParam(value = "sido", required = false) Integer sido,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "gugun", required = false) List<String> guguns,
             @RequestParam(value = "attractionType", required = false) List<Integer> attractionType

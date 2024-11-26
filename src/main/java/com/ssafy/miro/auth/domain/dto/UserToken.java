@@ -5,12 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-@Getter
-@AllArgsConstructor
-@ToString
-public class UserToken {
-    private Long id;
-    private String accessToken;
-    private String refreshToken;
-    private UserInfo userInfo;
-}
+public record UserToken (
+    Long id,
+    String accessToken,
+    String refreshToken,
+    UserInfo userInfo
+){}
