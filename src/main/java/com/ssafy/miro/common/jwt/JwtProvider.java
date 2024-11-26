@@ -108,8 +108,6 @@ public class JwtProvider {
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
-
-        log.info("토큰 전달됨 = {}", userToken.accessToken());
         return ResponseEntity.ok(ApiResponse.of(SuccessCode.AUTH_SUCCESS, new UserTokenResponse(userToken.accessToken(), userToken.userInfo())));
     }
 
@@ -121,8 +119,6 @@ public class JwtProvider {
 
         String refreshToken = extractRefreshToken(request.getCookies());
         String accessToken = bearerAuthorizationExtractor.extractAccessToken(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
-
-        System.out.println(">>>>>>>>>>>>>>>"+accessToken);
 
         // 유효성 검사
         validateTokens(accessToken, refreshToken);
