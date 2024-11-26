@@ -15,7 +15,7 @@ public class PromptLoader {
     @Value("classpath:prompts/prompt-attraction-system.st")
     private Resource systemPromptResource;
 
-    @Value("classpath:prompts/prompt-attraction-user.st")
+    @Value("classpath:prompts/prompt-recomment-attraction.st")
     private Resource userPromptResource;
 
     public String loadSystemPrompt() {
