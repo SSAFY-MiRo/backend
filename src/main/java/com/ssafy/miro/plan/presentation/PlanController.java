@@ -53,6 +53,8 @@ public class PlanController {
         return ResponseEntity.ok().body(ApiResponse.onSuccess(plans));
     }
 
-
-
+    @GetMapping("/edit/{id}")
+    public ResponseEntity<ApiResponse<Object>> getPlanEditInfo(@Auth User user, @PathVariable Long id) {
+        return ResponseEntity.ok().body(ApiResponse.onSuccess(planService.getPlanEditInfo(user, id)));
+    }
 }

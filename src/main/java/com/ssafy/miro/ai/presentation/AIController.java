@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@RestController("/api/v1/ai")
+@RestController
+@RequestMapping("/api/v1/ai")
 public class AIController {
     private final AIService aiService;
 
-    @GetMapping("/test")
-    public String test(@RequestParam Integer sidoId, @RequestParam String prompt) {
+    @GetMapping("/recommend")
+    public String recommendPlan(@RequestParam Integer sidoId, @RequestParam String prompt) {
         return aiService.getChatResponse(sidoId, prompt);
     }
 }
