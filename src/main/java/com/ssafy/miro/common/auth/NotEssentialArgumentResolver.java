@@ -42,7 +42,7 @@ public class NotEssentialArgumentResolver implements HandlerMethodArgumentResolv
             Optional<User> user = userRepository.findById(id);
             return user.orElse(null);
         }
-        catch (GlobalException e){
+        catch (Exception e){
             return null;
         }
     }

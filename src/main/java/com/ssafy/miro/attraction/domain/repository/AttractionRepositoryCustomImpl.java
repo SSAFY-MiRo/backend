@@ -43,7 +43,9 @@ public class AttractionRepositoryCustomImpl implements AttractionRepositoryCusto
                         attraction.firstImage1,
                         attraction.addr1,
                         attraction.homepage,
-                        attraction.overview
+                        attraction.overview,
+                        attraction.longitude,
+                        attraction.latitude
                 ))
                 .from(attraction)
                 .where(builder)
