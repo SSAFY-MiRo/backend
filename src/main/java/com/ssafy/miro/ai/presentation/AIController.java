@@ -14,7 +14,6 @@ public class AIController {
 
     @GetMapping("/recommend")
     public String recommendPlan(@RequestParam Integer sidoId, @RequestParam String prompt) {
-        System.out.println("YAAAAAAAAAAAAAAAAAAAAAAA++++" + sidoId + " " + prompt);
         return aiService.getChatResponse(sidoId, prompt);
     }
 }
